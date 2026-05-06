@@ -1,6 +1,6 @@
 ﻿namespace HRManagement.API.Repository
 {
-    public interface IRepository
+    public interface IJobRepository
     {
     }
 }

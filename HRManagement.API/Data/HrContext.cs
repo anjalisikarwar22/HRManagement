@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using HRManagement.API.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace HRManagement.API.Models;
+namespace HRManagement.API.Data;
 
-public partial class HrContext : DbContext
+public partial class HRContext : DbContext
 {
-    public HrContext()
+    public HRContext()
     {
     }
 
-    public HrContext(DbContextOptions<HrContext> options)
+    public HRContext(DbContextOptions<HRContext> options)
         : base(options)
     {
     }
@@ -28,8 +29,6 @@ public partial class HrContext : DbContext
     public virtual DbSet<Location> Locations { get; set; }
 
     public virtual DbSet<Region> Regions { get; set; }
-
-    public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -121,10 +120,18 @@ public partial class HrContext : DbContext
             entity.Property(e => e.ManagerId)
                 .HasColumnType("decimal(6, 0)")
                 .HasColumnName("manager_id");
+            entity.Property(e => e.Password)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("password");
             entity.Property(e => e.PhoneNumber)
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("phone_number");
+            entity.Property(e => e.Role)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("role");
             entity.Property(e => e.Salary)
                 .HasColumnType("decimal(8, 2)")
                 .HasColumnName("salary");
@@ -242,28 +249,6 @@ public partial class HrContext : DbContext
                 .HasMaxLength(25)
                 .IsUnicode(false)
                 .HasColumnName("region_name");
-        });
-
-        modelBuilder.Entity<User>(entity =>
-        {
-            entity.ToTable("users");
-
-            entity.HasIndex(e => e.Username, "UQ_users_username").IsUnique();
-
-            entity.Property(e => e.UserId).HasColumnName("user_id");
-            entity.Property(e => e.PasswordHash)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("password_hash");
-            entity.Property(e => e.Role)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasDefaultValue("employee")
-                .HasColumnName("role");
-            entity.Property(e => e.Username)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("username");
         });
 
         OnModelCreatingPartial(modelBuilder);

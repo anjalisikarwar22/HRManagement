@@ -27,6 +27,10 @@ public partial class Employee
 
     public decimal? DepartmentId { get; set; }
 
+    public string? Password { get; set; }
+
+    public string? Role { get; set; }
+
     public virtual Department? Department { get; set; }
 
     public virtual ICollection<Department> Departments { get; set; } = new List<Department>();
