@@ -17,9 +17,7 @@ namespace HRManagement.API
             builder.Services.AddSwaggerGen();
 
             // DbContext
-            
-
-            
+           
 
             var app = builder.Build();
 
