@@ -1,6 +1,5 @@
 using HRManagement.API.Common;
 using HRManagement.API.DTOs;
-using HRManagement.API.Exceptions;
 using HRManagement.API.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,29 +39,17 @@ namespace HRManagement.API.Controllers
             });
         }
 
-        // GET /api/jobhistory/by-job/{jobId}   — jobId constrained to 1-10 chars
+        // GET /api/jobhistory/by-job/{jobId}   — jobId 1-10 chars
         [HttpGet("by-job/{jobId:length(1,10)}")]
         public async Task<IActionResult> ByJob(string jobId)
         {
-            try
+            var data = await _service.GetByJob(jobId);
+            return Ok(new ApiResponse<List<JobHistoryDTO>>
             {
-                var data = await _service.GetByJob(jobId);
-                return Ok(new ApiResponse<List<JobHistoryDTO>>
-                {
-                    Success = true,
-                    Message = "Job history fetched successfully.",
-                    Data = data
-                });
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(new ApiResponse<List<JobHistoryDTO>>
-                {
-                    Success = false,
-                    Message = ex.Message,
-                    Data = null!
-                });
-            }
+                Success = true,
+                Message = "Job history fetched successfully.",
+                Data = data
+            });
         }
 
         // GET /api/jobhistory/by-employee/{empId}   — must be a positive number
@@ -95,43 +82,13 @@ namespace HRManagement.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] JobHistoryDTO dto)
         {
-            try
+            var data = await _service.Create(dto);
+            return Created($"/api/jobhistory/by-employee/{data.EmployeeId}", new ApiResponse<JobHistoryDTO>
             {
-                var data = await _service.Create(dto);
-                return Created($"/api/jobhistory/by-employee/{data.EmployeeId}", new ApiResponse<JobHistoryDTO>
-                {
-                    Success = true,
-                    Message = "Job history created successfully.",
-                    Data = data
-                });
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(new ApiResponse<JobHistoryDTO>
-                {
-                    Success = false,
-                    Message = ex.Message,
-                    Data = null!
-                });
-            }
-            catch (ValidationException ex)
-            {
-                return BadRequest(new ApiResponse<JobHistoryDTO>
-                {
-                    Success = false,
-                    Message = string.Join(" | ", ex.Errors),
-                    Data = null!
-                });
-            }
-            catch (BadRequestException ex)
-            {
-                return BadRequest(new ApiResponse<JobHistoryDTO>
-                {
-                    Success = false,
-                    Message = ex.Message,
-                    Data = null!
-                });
-            }
+                Success = true,
+                Message = "Job history created successfully.",
+                Data = data
+            });
         }
     }
 }

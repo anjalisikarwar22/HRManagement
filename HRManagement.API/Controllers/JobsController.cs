@@ -1,6 +1,5 @@
 using HRManagement.API.Common;
 using HRManagement.API.DTOs;
-using HRManagement.API.Exceptions;
 using HRManagement.API.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -68,156 +67,69 @@ namespace HRManagement.API.Controllers
             });
         }
 
-        // GET /api/jobs/{id}   — id constrained to 1-10 chars (matches DB schema)
+        // GET /api/jobs/{id}   — id constrained to 1-10 chars
         [HttpGet("{id:length(1,10)}")]
         public async Task<IActionResult> GetById(string id)
         {
-            try
+            var data = await _service.GetById(id);
+            return Ok(new ApiResponse<JobDTO>
             {
-                var data = await _service.GetById(id);
-                return Ok(new ApiResponse<JobDTO>
-                {
-                    Success = true,
-                    Message = "Job fetched successfully.",
-                    Data = data
-                });
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(new ApiResponse<JobDTO>
-                {
-                    Success = false,
-                    Message = ex.Message,
-                    Data = null!
-                });
-            }
+                Success = true,
+                Message = "Job fetched successfully.",
+                Data = data
+            });
         }
 
         // GET /api/jobs/{id}/employees
         [HttpGet("{id:length(1,10)}/employees")]
         public async Task<IActionResult> Employees(string id)
         {
-            try
+            var data = await _service.GetEmployees(id);
+            return Ok(new ApiResponse<List<EmployeeDTO>>
             {
-                var data = await _service.GetEmployees(id);
-                return Ok(new ApiResponse<List<EmployeeDTO>>
-                {
-                    Success = true,
-                    Message = "Employees fetched successfully.",
-                    Data = data
-                });
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(new ApiResponse<List<EmployeeDTO>>
-                {
-                    Success = false,
-                    Message = ex.Message,
-                    Data = null!
-                });
-            }
+                Success = true,
+                Message = "Employees fetched successfully.",
+                Data = data
+            });
         }
 
         // POST /api/jobs
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] JobDTO dto)
         {
-            try
+            var data = await _service.Create(dto);
+            return Created($"/api/jobs/{data.JobId}", new ApiResponse<JobDTO>
             {
-                var data = await _service.Create(dto);
-                return Created($"/api/jobs/{data.JobId}", new ApiResponse<JobDTO>
-                {
-                    Success = true,
-                    Message = "Job created successfully.",
-                    Data = data
-                });
-            }
-            catch (ValidationException ex)
-            {
-                return BadRequest(new ApiResponse<JobDTO>
-                {
-                    Success = false,
-                    Message = string.Join(" | ", ex.Errors),
-                    Data = null!
-                });
-            }
-            catch (BadRequestException ex)
-            {
-                return BadRequest(new ApiResponse<JobDTO>
-                {
-                    Success = false,
-                    Message = ex.Message,
-                    Data = null!
-                });
-            }
+                Success = true,
+                Message = "Job created successfully.",
+                Data = data
+            });
         }
 
         // PUT /api/jobs/{id}
         [HttpPut("{id:length(1,10)}")]
         public async Task<IActionResult> Update(string id, [FromBody] JobDTO dto)
         {
-            try
+            var data = await _service.Update(id, dto);
+            return Ok(new ApiResponse<JobDTO>
             {
-                var data = await _service.Update(id, dto);
-                return Ok(new ApiResponse<JobDTO>
-                {
-                    Success = true,
-                    Message = "Job updated successfully.",
-                    Data = data
-                });
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(new ApiResponse<JobDTO>
-                {
-                    Success = false,
-                    Message = ex.Message,
-                    Data = null!
-                });
-            }
-            catch (ValidationException ex)
-            {
-                return BadRequest(new ApiResponse<JobDTO>
-                {
-                    Success = false,
-                    Message = string.Join(" | ", ex.Errors),
-                    Data = null!
-                });
-            }
+                Success = true,
+                Message = "Job updated successfully.",
+                Data = data
+            });
         }
 
         // PATCH /api/jobs/{id}/salary-range
         [HttpPatch("{id:length(1,10)}/salary-range")]
         public async Task<IActionResult> UpdateSalaryRange(string id, [FromBody] SalaryDTO dto)
         {
-            try
+            var data = await _service.UpdateSalaryRange(id, dto);
+            return Ok(new ApiResponse<JobDTO>
             {
-                var data = await _service.UpdateSalaryRange(id, dto);
-                return Ok(new ApiResponse<JobDTO>
-                {
-                    Success = true,
-                    Message = "Salary range updated successfully.",
-                    Data = data
-                });
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(new ApiResponse<JobDTO>
-                {
-                    Success = false,
-                    Message = ex.Message,
-                    Data = null!
-                });
-            }
-            catch (ValidationException ex)
-            {
-                return BadRequest(new ApiResponse<JobDTO>
-                {
-                    Success = false,
-                    Message = string.Join(" | ", ex.Errors),
-                    Data = null!
-                });
-            }
+                Success = true,
+                Message = "Salary range updated successfully.",
+                Data = data
+            });
         }
     }
 }
