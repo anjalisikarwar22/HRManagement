@@ -40,9 +40,7 @@ namespace HRManagement.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetById(int id)
         {
-            try
-            {
-                var department = await _departmentService.GetByIdAsync(id);
+            var department = await _departmentService.GetByIdAsync(id);
 
             if (department == null)
                 return NotFound(ApiResponse<object>.FailureResponse($"Department {id} was not found."));

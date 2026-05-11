@@ -4,14 +4,11 @@ namespace HRManagement.API.Services
 {
     public interface IAuthService
     {
-        Task<string> RegisterAsync(
-            RegisterDto dto);
+        Task<string> RegisterAsync(RegisterDto dto);
 
-        Task<object> LoginAsync(
-            LoginDto dto);
+        Task<object> LoginAsync(LoginDto dto);
 
-        Task<object> GetCurrentUserAsync(
-            decimal employeeId);
+        Task<object> GetCurrentUserAsync(decimal employeeId);
     }
 
 }

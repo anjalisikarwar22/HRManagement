@@ -3,8 +3,7 @@ using HRManagement.API.DTOs.Employee;
 
 namespace HRManagement.API.Validators.Employee
 {
-    public class CreateEmployeeValidator
-        : AbstractValidator<CreateEmployeeDto>
+    public class CreateEmployeeValidator : AbstractValidator<CreateEmployeeDto>
     {
         public CreateEmployeeValidator()
         {
@@ -35,14 +34,12 @@ namespace HRManagement.API.Validators.Employee
             RuleFor(x => x.Salary)
                 .GreaterThan(0)
                 .When(x => x.Salary.HasValue)
-                .WithMessage(
-                    "Salary must be greater than 0");
+                .WithMessage("Salary must be greater than 0");
 
             RuleFor(x => x.CommissionPct)
                 .InclusiveBetween(0, 1)
                 .When(x => x.CommissionPct.HasValue)
-                .WithMessage(
-                    "Commission must be between 0 and 1");
+                .WithMessage("Commission must be between 0 and 1");
         }
     }
 }

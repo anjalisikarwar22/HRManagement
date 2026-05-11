@@ -26,8 +26,6 @@
 
         public decimal TotalSalary { get; set; }
 
-        public string Role { get; set; }
-
         public DateOnly HireDate{ get; set; }
     }
 }
