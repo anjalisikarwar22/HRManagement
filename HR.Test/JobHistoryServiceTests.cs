@@ -1,4 +1,6 @@
 ﻿using FluentValidation;
+using Xunit;
+using FluentValidation;
 using FluentValidation.Results;
 using HRManagement.API.DTOs;
 using HRManagement.API.Exceptions;
@@ -39,6 +41,7 @@ namespace HR.Test
         };
 
         [Fact]
+[Fact]
         public async Task GetAll_returns_all_records()
         {
             var list = new List<JobHistory> { SampleHistory(), SampleHistory() };
@@ -99,6 +102,7 @@ namespace HR.Test
         }
 
         [Fact]
+[Fact]
         public async Task GetByJob_throws_NotFound_when_job_missing()
         {
             _jobRepo.Setup(r => r.GetById("NOPE")).ReturnsAsync((Job?)null);

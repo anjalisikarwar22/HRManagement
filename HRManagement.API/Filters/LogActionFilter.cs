@@ -1,4 +1,6 @@
 ﻿
+﻿// HRManagement.API/Filters/LogActionFilter.cs
+
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Diagnostics;
 
@@ -8,6 +10,7 @@ namespace HRManagement.API.Filters
         ILogger<LogActionFilter> logger) : IActionFilter
     {
         private Stopwatch? _stopwatch;
+
         public void OnActionExecuting(
             ActionExecutingContext context)
         {
@@ -22,6 +25,7 @@ namespace HRManagement.API.Filters
                 "STARTED: {Controller}/{Action}",
                 controller, action);
         }
+
         public void OnActionExecuted(
             ActionExecutedContext context)
         {

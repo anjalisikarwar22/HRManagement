@@ -8,12 +8,16 @@ namespace HRManagement.API.Controllers
 {
     [Route("api/jobs")]
     [ApiController]
+    [Authorize]
     public class JobsController : ControllerBase
     {
         private readonly IJobService _service;
 
         public JobsController(IJobService service) => _service = service;
         [HttpGet]
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Employee")]
         public async Task<IActionResult> GetAll()
         {
             var data = await _service.GetAll();
@@ -25,6 +29,9 @@ namespace HRManagement.API.Controllers
             });
         }
         [HttpGet("count")]
+
+        [HttpGet("count")]
+        [Authorize(Roles = "Admin,Employee")]
         public async Task<IActionResult> Count()
         {
             var data = await _service.Count();
@@ -36,6 +43,9 @@ namespace HRManagement.API.Controllers
             });
         }
         [HttpGet("search")]
+
+        [HttpGet("search")]
+        [Authorize(Roles = "Admin,Employee")]
         public async Task<IActionResult> Search([FromQuery] string title)
         {
             var data = await _service.SearchByTitle(title);
@@ -47,6 +57,9 @@ namespace HRManagement.API.Controllers
             });
         }
         [HttpGet("by-salary-range")]
+
+        [HttpGet("by-salary-range")]
+        [Authorize(Roles = "Admin,Employee")]
         public async Task<IActionResult> BySalaryRange(
             [FromQuery] decimal min,
             [FromQuery] decimal max)
@@ -60,6 +73,9 @@ namespace HRManagement.API.Controllers
             });
         }
         [HttpGet("{id:length(1,10)}")]
+
+        [HttpGet("{id:length(1,10)}")]
+        [Authorize(Roles = "Admin,Employee")]
         public async Task<IActionResult> GetById(string id)
         {
             var data = await _service.GetById(id);
@@ -71,6 +87,9 @@ namespace HRManagement.API.Controllers
             });
         }
         [HttpGet("{id:length(1,10)}/employees")]
+
+        [HttpGet("{id:length(1,10)}/employees")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Employees(string id)
         {
             var data = await _service.GetEmployees(id);
@@ -82,6 +101,9 @@ namespace HRManagement.API.Controllers
             });
         }
         [HttpPost]
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] JobDTO dto)
         {
             var data = await _service.Create(dto);
@@ -93,6 +115,9 @@ namespace HRManagement.API.Controllers
             });
         }
         [HttpPut("{id:length(1,10)}")]
+
+        [HttpPut("{id:length(1,10)}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(string id, [FromBody] JobDTO dto)
         {
             var data = await _service.Update(id, dto);
@@ -104,6 +129,9 @@ namespace HRManagement.API.Controllers
             });
         }
         [HttpPatch("{id:length(1,10)}/salary-range")]
+
+        [HttpPatch("{id:length(1,10)}/salary-range")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateSalaryRange(string id, [FromBody] SalaryDTO dto)
         {
             var data = await _service.UpdateSalaryRange(id, dto);

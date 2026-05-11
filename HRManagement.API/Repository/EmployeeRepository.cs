@@ -15,7 +15,11 @@ namespace HRManagement.API.Repository
             _context = context;
         }
 
+<<<<<<< HEAD
         public async Task<List<Employee>>
+=======
+public async Task<List<Employee>>
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
             GetAllAsync()
         {
             return await _context.Employees
@@ -25,7 +29,11 @@ namespace HRManagement.API.Repository
                 .ToListAsync();
         }
 
+<<<<<<< HEAD
         public async Task<Employee?>
+=======
+public async Task<Employee?>
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
             GetByIdAsync(int id)
         {
             return await _context.Employees
@@ -36,7 +44,11 @@ namespace HRManagement.API.Repository
                     e.EmployeeId == id);
         }
 
+<<<<<<< HEAD
         public async Task<Employee?>
+=======
+public async Task<Employee?>
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
             GetByEmailAsync(string email)
         {
             return await _context.Employees
@@ -44,7 +56,11 @@ namespace HRManagement.API.Repository
                     e.Email == email);
         }
 
+<<<<<<< HEAD
         public async Task<List<Employee>>
+=======
+public async Task<List<Employee>>
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
             GetManagersAsync()
         {
             return await _context.Employees
@@ -56,7 +72,11 @@ namespace HRManagement.API.Repository
                 .ToListAsync();
         }
 
+<<<<<<< HEAD
         public async Task<List<Employee>>
+=======
+public async Task<List<Employee>>
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
             GetSubordinatesAsync(int managerId)
         {
             return await _context.Employees
@@ -66,7 +86,11 @@ namespace HRManagement.API.Repository
                 .ToListAsync();
         }
 
+<<<<<<< HEAD
         public async Task<List<Employee>>
+=======
+public async Task<List<Employee>>
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
             SearchEmployeesAsync(string name)
         {
             return await _context.Employees
@@ -80,7 +104,11 @@ namespace HRManagement.API.Repository
                 .ToListAsync();
         }
 
+<<<<<<< HEAD
         public async Task<List<Employee>>
+=======
+public async Task<List<Employee>>
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
             GetEmployeesByDepartmentAsync(
                 short departmentId)
         {
@@ -92,7 +120,11 @@ namespace HRManagement.API.Repository
                 .ToListAsync();
         }
 
+<<<<<<< HEAD
         public async Task<bool>
+=======
+public async Task<bool>
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
             EmployeeExistsAsync(int id)
         {
             return await _context.Employees
@@ -100,7 +132,11 @@ namespace HRManagement.API.Repository
                     e.EmployeeId == id);
         }
 
+<<<<<<< HEAD
         public async Task<bool>
+=======
+public async Task<bool>
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
             EmailExistsAsync(string email)
         {
             return await _context.Employees
@@ -108,19 +144,31 @@ namespace HRManagement.API.Repository
                     e.Email == email);
         }
 
+<<<<<<< HEAD
         public async Task AddAsync(
+=======
+public async Task AddAsync(
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
             Employee employee)
         {
             await _context.Employees
                 .AddAsync(employee);
         }
 
+<<<<<<< HEAD
         public void Update(Employee employee)
+=======
+public void Update(Employee employee)
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
         {
             _context.Employees.Update(employee);
         }
 
+<<<<<<< HEAD
         public async Task SaveChangesAsync()
+=======
+public async Task SaveChangesAsync()
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
         {
             await _context.SaveChangesAsync();
         }

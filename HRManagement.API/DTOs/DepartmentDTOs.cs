@@ -13,6 +13,7 @@
     }
 
     public class DepartmentListDto
+public class DepartmentListDto
     {
         public decimal DepartmentId { get; set; }
 
@@ -24,6 +25,7 @@
     }
 
     public class CreateDepartmentDto
+public class CreateDepartmentDto
     {
         public string DepartmentName { get; set; } = string.Empty;
 
@@ -33,6 +35,7 @@
     }
 
     public class UpdateDepartmentDto
+public class UpdateDepartmentDto
     {
         public string DepartmentName { get; set; } = string.Empty;
 
@@ -42,6 +45,7 @@
     }
 
     public class DepartmentDropdownDto
+public class DepartmentDropdownDto
     {
         public decimal DepartmentId { get; set; }
 
@@ -49,6 +53,7 @@
     }
 
     public class PagedDepartmentDto
+public class PagedDepartmentDto
     {
         public IEnumerable<DepartmentListDto> Items { get; set; }
             = new List<DepartmentListDto>();
@@ -61,6 +66,7 @@
     }
 
     public class DepartmentSummaryDto
+public class DepartmentSummaryDto
     {
         public int TotalDepartments { get; set; }
 

@@ -1,4 +1,4 @@
-﻿using HRManagement.API.Common;
+using HRManagement.API.Common;
 using HRManagement.API.DTOs.Departments;
 using HRManagement.API.Exceptions;
 using HRManagement.API.Filters;
@@ -27,16 +27,9 @@ namespace HRManagement.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAll()
         {
-            try
-            {
-                var departments = await _departmentService.GetAllAsync();
-                return Ok(ApiResponse<IEnumerable<DepartmentListDto>>.SuccessResponse(
-                    departments, "Departments retrieved successfully."));
-            }
-            catch (Exception)
-            {
-                return ServerError("Failed to retrieve departments.");
-            }
+            var departments = await _departmentService.GetAllAsync();
+            return Ok(ApiResponse<IEnumerable<DepartmentListDto>>.SuccessResponse(
+                departments, "Departments retrieved successfully."));
         }
 
         [Authorize]
@@ -51,20 +44,11 @@ namespace HRManagement.API.Controllers
             {
                 var department = await _departmentService.GetByIdAsync(id);
 
-                if (department == null)
-                    return NotFound(ApiResponse<object>.FailureResponse($"Department {id} was not found."));
+            if (department == null)
+                return NotFound(ApiResponse<object>.FailureResponse($"Department {id} was not found."));
 
-                return Ok(ApiResponse<DepartmentDto>.SuccessResponse(
-                    department, "Department retrieved successfully."));
-            }
-            catch (ValidationException ex)
-            {
-                return BadRequest(ApiResponse<object>.FailureResponse(ex.Message));
-            }
-            catch (Exception)
-            {
-                return ServerError($"Failed to retrieve department {id}.");
-            }
+            return Ok(ApiResponse<DepartmentDto>.SuccessResponse(
+                department, "Department retrieved successfully."));
         }
 
         [Authorize]
@@ -74,20 +58,9 @@ namespace HRManagement.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetByLocation(int locationId)
         {
-            try
-            {
-                var departments = await _departmentService.GetByLocationAsync(locationId);
-                return Ok(ApiResponse<IEnumerable<DepartmentListDto>>.SuccessResponse(
-                    departments, $"Departments for location {locationId} retrieved successfully."));
-            }
-            catch (ValidationException ex)
-            {
-                return BadRequest(ApiResponse<object>.FailureResponse(ex.Message));
-            }
-            catch (Exception)
-            {
-                return ServerError($"Failed to retrieve departments for location {locationId}.");
-            }
+            var departments = await _departmentService.GetByLocationAsync(locationId);
+            return Ok(ApiResponse<IEnumerable<DepartmentListDto>>.SuccessResponse(
+                departments, $"Departments for location {locationId} retrieved successfully."));
         }
 
         [Authorize]
@@ -97,20 +70,9 @@ namespace HRManagement.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetByManager(int managerId)
         {
-            try
-            {
-                var departments = await _departmentService.GetByManagerAsync(managerId);
-                return Ok(ApiResponse<IEnumerable<DepartmentListDto>>.SuccessResponse(
-                    departments, $"Departments for manager {managerId} retrieved successfully."));
-            }
-            catch (ValidationException ex)
-            {
-                return BadRequest(ApiResponse<object>.FailureResponse(ex.Message));
-            }
-            catch (Exception)
-            {
-                return ServerError($"Failed to retrieve departments for manager {managerId}.");
-            }
+            var departments = await _departmentService.GetByManagerAsync(managerId);
+            return Ok(ApiResponse<IEnumerable<DepartmentListDto>>.SuccessResponse(
+                departments, $"Departments for manager {managerId} retrieved successfully."));
         }
 
         [Authorize]
@@ -120,20 +82,9 @@ namespace HRManagement.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Search([FromQuery] string name)
         {
-            try
-            {
-                var departments = await _departmentService.SearchByNameAsync(name);
-                return Ok(ApiResponse<IEnumerable<DepartmentListDto>>.SuccessResponse(
-                    departments, "Search completed successfully."));
-            }
-            catch (ValidationException ex)
-            {
-                return BadRequest(ApiResponse<object>.FailureResponse(ex.Message));
-            }
-            catch (Exception)
-            {
-                return ServerError("Failed to search departments.");
-            }
+            var departments = await _departmentService.SearchByNameAsync(name);
+            return Ok(ApiResponse<IEnumerable<DepartmentListDto>>.SuccessResponse(
+                departments, "Search completed successfully."));
         }
 
         [Authorize]
@@ -145,20 +96,9 @@ namespace HRManagement.API.Controllers
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10)
         {
-            try
-            {
-                var result = await _departmentService.GetPagedAsync(pageNumber, pageSize);
-                return Ok(ApiResponse<PagedDepartmentDto>.SuccessResponse(
-                    result, "Paged departments retrieved successfully."));
-            }
-            catch (ValidationException ex)
-            {
-                return BadRequest(ApiResponse<object>.FailureResponse(ex.Message));
-            }
-            catch (Exception)
-            {
-                return ServerError("Failed to retrieve paged departments.");
-            }
+            var result = await _departmentService.GetPagedAsync(pageNumber, pageSize);
+            return Ok(ApiResponse<PagedDepartmentDto>.SuccessResponse(
+                result, "Paged departments retrieved successfully."));
         }
 
         [Authorize]
@@ -167,16 +107,9 @@ namespace HRManagement.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetSummary()
         {
-            try
-            {
-                var summary = await _departmentService.GetSummaryAsync();
-                return Ok(ApiResponse<DepartmentSummaryDto>.SuccessResponse(
-                    summary, "Department summary retrieved successfully."));
-            }
-            catch (Exception)
-            {
-                return ServerError("Failed to retrieve department summary.");
-            }
+            var summary = await _departmentService.GetSummaryAsync();
+            return Ok(ApiResponse<DepartmentSummaryDto>.SuccessResponse(
+                summary, "Department summary retrieved successfully."));
         }
 
         [Authorize]
@@ -185,15 +118,8 @@ namespace HRManagement.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetCount()
         {
-            try
-            {
-                var count = await _departmentService.GetCountAsync();
-                return Ok(ApiResponse<int>.SuccessResponse(count, $"Total departments: {count}"));
-            }
-            catch (Exception)
-            {
-                return ServerError("Failed to retrieve department count.");
-            }
+            var count = await _departmentService.GetCountAsync();
+            return Ok(ApiResponse<int>.SuccessResponse(count, $"Total departments: {count}"));
         }
 
         [Authorize]
@@ -202,16 +128,9 @@ namespace HRManagement.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetDropdown()
         {
-            try
-            {
-                var items = await _departmentService.GetDropdownAsync();
-                return Ok(ApiResponse<IEnumerable<DepartmentDropdownDto>>.SuccessResponse(
-                    items, "Dropdown data retrieved successfully."));
-            }
-            catch (Exception)
-            {
-                return ServerError("Failed to retrieve department dropdown data.");
-            }
+            var items = await _departmentService.GetDropdownAsync();
+            return Ok(ApiResponse<IEnumerable<DepartmentDropdownDto>>.SuccessResponse(
+                items, "Dropdown data retrieved successfully."));
         }
 
         [Authorize]
@@ -228,11 +147,11 @@ namespace HRManagement.API.Controllers
                 return CreatedAtAction(
                     nameof(GetById),
                     new { id = created.DepartmentId },
-                    ApiResponse<DepartmentDto>.SuccessResponse(created, "Department created successfully."));
+                    new ApiResponse<DepartmentDto>(true, "Department created successfully.", created));
             }
             catch (ValidationException ex)
             {
-                return BadRequest(ApiResponse<object>.FailureResponse(ex.Message));
+                return BadRequest(new ApiResponse<object>(false, ex.Message, null));
             }
             catch (Exception)
             {
@@ -253,14 +172,13 @@ namespace HRManagement.API.Controllers
                 var updated = await _departmentService.UpdateAsync(id, dto);
 
                 if (updated == null)
-                    return NotFound(ApiResponse<object>.FailureResponse($"Department {id} was not found."));
+                    return NotFound(new ApiResponse<object>(false, $"Department {id} was not found.", null));
 
-                return Ok(ApiResponse<DepartmentDto>.SuccessResponse(
-                    updated, "Department updated successfully."));
+                return Ok(new ApiResponse<DepartmentDto>(true, "Department updated successfully.", updated));
             }
             catch (ValidationException ex)
             {
-                return BadRequest(ApiResponse<object>.FailureResponse(ex.Message));
+                return BadRequest(new ApiResponse<object>(false, ex.Message, null));
             }
             catch (Exception)
             {

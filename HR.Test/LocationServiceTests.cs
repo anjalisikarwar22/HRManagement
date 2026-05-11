@@ -1,4 +1,5 @@
-﻿using HRManagement.API.DTOs.Location;
+using Xunit;
+using HRManagement.API.DTOs.Location;
 using HRManagement.API.Exceptions;
 using HRManagement.API.Models;
 using HRManagement.API.Repository;
@@ -8,6 +9,8 @@ using Moq;
 namespace HR.Test
 {
     public class LocationServiceTests
+
+public class LocationServiceTests
     {
         private readonly Mock<ILocationRepository> _repositoryMock;
         private readonly LocationService _service;
@@ -21,6 +24,11 @@ namespace HR.Test
         [Fact]
         public async Task GetByIdAsync_ShouldReturnLocation()
         {
+[Fact]
+        public async Task
+    GetByIdAsync_ShouldReturnLocation()
+        {
+
             var location = new Location
             {
                 LocationId = 1000,
@@ -38,6 +46,20 @@ namespace HR.Test
         [Fact]
         public async Task GetByIdAsync_ShouldThrowNotFound()
         {
+            _repositoryMock.Setup(x =>x.GetByIdAsync(1000)).ReturnsAsync(location);
+
+var result = await _service.GetByIdAsync(1000);
+
+Assert.NotNull(result);
+
+            Assert.Equal( "Seattle", result.City);
+        }
+
+[Fact]
+        public async Task
+        GetByIdAsync_ShouldThrowNotFound()
+        {
+
             _repositoryMock.Setup(x => x.GetByIdAsync(9999))
                 .ReturnsAsync((Location?)null);
 
@@ -81,6 +103,40 @@ namespace HR.Test
 
             _repositoryMock.Setup(x => x.GetMaxLocationIdAsync())
                 .ReturnsAsync((decimal?)null);
+await Assert.ThrowsAsync<NotFoundException>(() =>_service.GetByIdAsync(9999));
+        }
+
+[Fact]
+        public async Task
+        CreateAsync_ShouldCreateLocation()
+        {
+
+            var dto =new CreateLocationDto{
+                    City = "Delhi"
+                };
+
+            _repositoryMock.Setup(x =>x.GetByIdAsync(2300))
+                           .ReturnsAsync((Location)null);
+
+            _repositoryMock.Setup(x =>x.GetMaxLocationIdAsync())
+                           .ReturnsAsync(2200);
+
+await _service.CreateAsync(dto);
+
+_repositoryMock.Verify(x => x.AddAsync(It.IsAny<Location>()),Times.Once);
+
+            _repositoryMock.Verify(x => x.SaveChangesAsync(),Times.Once);
+        }
+
+[Fact]
+        public async Task
+        CreateAsync_ShouldThrowDuplicateException()
+        {
+
+            var dto = new CreateLocationDto
+            {
+                City = "Delhi"
+            };
 
             await _service.CreateAsync(dto);
 
@@ -97,6 +153,13 @@ namespace HR.Test
                 LocationId = 1000,
                 City = "Old City"
             };
+await Assert.ThrowsAsync<BadRequestException>(() =>_service.CreateAsync(dto));
+        }
+
+[Fact]
+        public async Task
+        UpdateAsync_ShouldUpdateLocation()
+        {
 
             var dto = new UpdateLocationDto
             {
@@ -125,6 +188,21 @@ namespace HR.Test
                 LocationId = 1000,
                 City = "Old City"
             };
+                            .ReturnsAsync(existingLocation);
+
+await _service.UpdateAsync(1000, dto);
+
+Assert.Equal( "New Delhi",existingLocation.City);
+
+            _repositoryMock.Verify(x => x.UpdateAsync(existingLocation),Times.Once);
+
+            _repositoryMock.Verify(x => x.SaveChangesAsync(),Times.Once);
+        }
+
+[Fact]
+        public async Task
+        UpdateAsync_ShouldThrowException_WhenUpdateFails()
+        {
 
             var dto = new UpdateLocationDto
             {
@@ -147,6 +225,16 @@ namespace HR.Test
                 LocationId = 1000,
                 City = "Seattle"
             };
+            _repositoryMock.Setup(x =>x.UpdateAsync(location))
+                           .ThrowsAsync(new Exception("Database error"));
+
+await Assert.ThrowsAsync<Exception>(() =>_service.UpdateAsync(1000,dto));
+        }
+
+[Fact]
+        public async Task
+        GetByCityAsync_ShouldReturnLocation()
+        {
 
             _repositoryMock.Setup(x => x.GetByCityAsync("Seattle"))
                 .ReturnsAsync(location);
@@ -164,6 +252,25 @@ namespace HR.Test
                 .ReturnsAsync((Location?)null);
 
             await Assert.ThrowsAsync<NotFoundException>(() => _service.GetByCityAsync("Unknown"));
+            _repositoryMock.Setup(x =>x.GetByCityAsync("Seattle"))
+                           .ReturnsAsync(location);
+
+var result =await _service.GetByCityAsync("Seattle");
+
+Assert.NotNull(result);
+
+            Assert.Equal("Seattle",result.City);
+        }
+
+[Fact]
+        public async Task
+        GetByCityAsync_ShouldThrowNotFound()
+        {
+
+            _repositoryMock.Setup(x =>x.GetByCityAsync("Unknown"))
+                           .ReturnsAsync((Location)null);
+
+await Assert.ThrowsAsync<NotFoundException>(() =>_service.GetByCityAsync("Unknown"));
         }
     }
 }

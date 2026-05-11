@@ -1,4 +1,8 @@
 ﻿using HRManagement.API.Common;
+using HRManagement.API.Services;
+using Microsoft.AspNetCore.Mvc;
+using HRManagement.API.Common;
+using Microsoft.AspNetCore.Authorization;
 using HRManagement.API.DTOs.Location;
 using HRManagement.API.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -26,6 +30,7 @@ namespace HRManagement.API.Controllers
         }
 
         [HttpGet("{id}")]
+[HttpGet("{id}")]
         public async Task<IActionResult> GetById(decimal id)
         {
             var data = await _service.GetByIdAsync(id);
@@ -56,6 +61,7 @@ namespace HRManagement.API.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+[Authorize(Roles = "Admin")]
         [HttpGet("dropdown")]
         public async Task<IActionResult> Dropdown()
         {
@@ -83,6 +89,25 @@ namespace HRManagement.API.Controllers
         {
             var count = await _service.CountAsync();
             return Ok(new ApiResponse<object>(true, "Count fetched successfully", count));
+
+            return Ok(new ApiResponse<object>(
+                true,
+                "Locations fetched successfully",
+                data
+            ));
+        }
+
+[Authorize(Roles = "Admin")]
+            [HttpGet("count")]
+            public async Task<IActionResult> Count()
+        {
+            var count = await _service.CountAsync();
+
+            return Ok(new ApiResponse<object>(
+                true,
+                "Count fetched successfully",
+                count
+            ));
         }
 
         [HttpGet("states")]
@@ -91,5 +116,13 @@ namespace HRManagement.API.Controllers
             var data = await _service.GetDistinctStatesAsync();
             return Ok(new ApiResponse<object>(true, "States fetched successfully", data));
         }
+
+            return Ok(new ApiResponse<object>(
+                true,
+                "States fetched successfully",
+                data
+            ));
+        }
+
     }
 }

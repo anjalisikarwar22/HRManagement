@@ -8,12 +8,16 @@ namespace HRManagement.API.Controllers
 {
     [Route("api/jobhistory")]
     [ApiController]
+    [Authorize]
     public class JobHistoryController : ControllerBase
     {
         private readonly IJobHistoryService _service;
 
         public JobHistoryController(IJobHistoryService service) => _service = service;
         [HttpGet]
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll()
         {
             var data = await _service.GetAll();
@@ -25,6 +29,9 @@ namespace HRManagement.API.Controllers
             });
         }
         [HttpGet("count")]
+
+        [HttpGet("count")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Count()
         {
             var data = await _service.Count();
@@ -36,6 +43,9 @@ namespace HRManagement.API.Controllers
             });
         }
         [HttpGet("by-job/{jobId:length(1,10)}")]
+
+        [HttpGet("by-job/{jobId:length(1,10)}")]
+        [Authorize(Roles = "Admin,Employee")]
         public async Task<IActionResult> ByJob(string jobId)
         {
             var data = await _service.GetByJob(jobId);
@@ -47,6 +57,9 @@ namespace HRManagement.API.Controllers
             });
         }
         [HttpGet("by-employee/{empId:decimal:min(1)}")]
+
+        [HttpGet("by-employee/{empId:decimal:min(1)}")]
+        [Authorize(Roles = "Admin,Employee")]
         public async Task<IActionResult> ByEmployee(decimal empId)
         {
             var data = await _service.GetByEmployee(empId);
@@ -58,6 +71,9 @@ namespace HRManagement.API.Controllers
             });
         }
         [HttpGet("by-department/{deptId:decimal:min(1)}")]
+
+        [HttpGet("by-department/{deptId:decimal:min(1)}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ByDepartment(decimal deptId)
         {
             var data = await _service.GetByDepartment(deptId);
@@ -69,6 +85,9 @@ namespace HRManagement.API.Controllers
             });
         }
         [HttpPost]
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] JobHistoryDTO dto)
         {
             var data = await _service.Create(dto);

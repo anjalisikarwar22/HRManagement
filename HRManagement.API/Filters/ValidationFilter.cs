@@ -1,4 +1,6 @@
 ﻿
+﻿// HRManagement.API/Filters/ValidationFilter.cs
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -16,6 +18,7 @@ namespace HRManagement.API.Filters
                         context.ModelState);
             }
         }
+
         public void OnActionExecuted(
             ActionExecutedContext context)
         { }
