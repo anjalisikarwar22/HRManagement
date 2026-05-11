@@ -1,5 +1,4 @@
 using HRManagement.API.Common;
-﻿using HRManagement.API.Common;
 using HRManagement.API.Exceptions;
 using System.Net;
 using System.Text.Json;
@@ -10,88 +9,6 @@ namespace HRManagement.API.Middleware
     {
         private readonly RequestDelegate _next;
 
-        public ExceptionMiddleware(
-            RequestDelegate next)
-        {
-            _next = next;
-        }
-
-        public async Task InvokeAsync(
-            HttpContext context)
-        {
-            try
-            {
-                await _next(context);
-            }
-            catch (Exception ex)
-            {
-                await HandleExceptionAsync(
-                    context,
-                    ex);
-            }
-        }
-
-        private static Task HandleExceptionAsync(
-            HttpContext context,
-            Exception exception)
-        {
-            HttpStatusCode statusCode;
-
-            switch (exception)
-            {
-                case BadRequestException:
-                    statusCode =
-                        HttpStatusCode.BadRequest;
-                    break;
-
-                case NotFoundException:
-                    statusCode =
-                        HttpStatusCode.NotFound;
-                    break;
-
-                case UnauthorizedException:
-                    statusCode =
-                        HttpStatusCode.Unauthorized;
-                    break;
-
-                case ForbiddenException:
-                    statusCode =
-                        HttpStatusCode.Forbidden;
-                    break;
-
-                case ValidationException:
-                    statusCode =
-                        HttpStatusCode.BadRequest;
-                    break;
-
-                default:
-                    statusCode =
-                        HttpStatusCode
-                        .InternalServerError;
-                    break;
-            }
-
-            var response =
-                new ApiResponse<object>(
-                    false,
-                    exception.Message,
-                    null);
-
-            var jsonResponse =
-                JsonSerializer.Serialize(response);
-
-            context.Response.ContentType =
-                "application/json";
-
-            context.Response.StatusCode =
-                (int)statusCode;
-
-            return context.Response
-                .WriteAsync(jsonResponse);
-        }
-    }
-
-}
         public ExceptionMiddleware(RequestDelegate next) => _next = next;
 
         public async Task Invoke(HttpContext ctx)
@@ -112,6 +29,18 @@ namespace HRManagement.API.Middleware
             {
                 await Write(ctx, HttpStatusCode.BadRequest, ex.Message);
             }
+            catch (DuplicateException ex)
+            {
+                await Write(ctx, HttpStatusCode.Conflict, ex.Message);
+            }
+            catch (UnauthorizedException ex)
+            {
+                await Write(ctx, HttpStatusCode.Unauthorized, ex.Message);
+            }
+            catch (ForbiddenException ex)
+            {
+                await Write(ctx, HttpStatusCode.Forbidden, ex.Message);
+            }
             catch (Exception ex)
             {
                 await Write(ctx, HttpStatusCode.InternalServerError, ex.Message);
@@ -122,83 +51,8 @@ namespace HRManagement.API.Middleware
         {
             ctx.Response.StatusCode = (int)status;
             ctx.Response.ContentType = "application/json";
-            var body = new ApiResponse<object>
-            {
-                Success = false,
-                Message = message,
-                Data = null!
-            };
+            var body = new ApiResponse<object>(false, message, null);
             return ctx.Response.WriteAsync(JsonSerializer.Serialize(body));
-        }
-    }
-}
-    public class ExceptionMiddleware(
-        RequestDelegate next,
-        ILogger<ExceptionMiddleware> logger)
-    {
-        private static readonly JsonSerializerOptions JsonOptions
-            = new()
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            };
-
-        public async Task InvokeAsync(HttpContext context)
-        {
-            try
-            {
-                await next(context);
-            }
-            catch (NotFoundException ex)
-            {
-                logger.LogWarning(
-                    "Not Found: {Message}", ex.Message);
-                await SendErrorResponse(
-                    context, ex.Message, HttpStatusCode.NotFound);
-            }
-            catch (DuplicateException ex)
-            {
-                logger.LogWarning(
-                    "Duplicate: {Message}", ex.Message);
-                await SendErrorResponse(
-                    context, ex.Message, HttpStatusCode.Conflict);
-            }
-            catch (ValidationException ex)
-            {
-                logger.LogWarning(
-                    "Validation: {Message}", ex.Message);
-                await SendErrorResponse(
-                    context, ex.Message,
-                    HttpStatusCode.BadRequest);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(
-                    ex, "Unexpected Error: {Message}",
-                    ex.Message);
-                await SendErrorResponse(
-                    context,
-                    "Something went wrong. Please try again.",
-                    HttpStatusCode.InternalServerError);
-            }
-        }
-        private static async Task SendErrorResponse(
-            HttpContext context,
-            string message,
-            HttpStatusCode statusCode)
-        {
-            context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)statusCode;
-
-            var response = new ApiResponse<object>
-            {
-                Success = false,
-                Message = message,
-                Data = null
-            };
-
-            await context.Response.WriteAsync(
-                JsonSerializer.Serialize(
-                    response, JsonOptions));
         }
     }
 }

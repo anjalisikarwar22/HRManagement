@@ -22,9 +22,7 @@ namespace HRManagement.API.Services
                 int id,
                 UpdateEmployeeDto dto);
 
-        
-
-        Task<string>
+Task<string>
             UpdateRoleAsync(
                 int id,
                 UpdateRoleDto dto);

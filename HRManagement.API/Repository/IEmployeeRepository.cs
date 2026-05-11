@@ -30,8 +30,7 @@ namespace HRManagement.API.Repository
 
         void Update(Employee employee);
 
-
-        Task SaveChangesAsync();
+Task SaveChangesAsync();
     }
 
 }

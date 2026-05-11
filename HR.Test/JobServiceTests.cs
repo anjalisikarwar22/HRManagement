@@ -1,3 +1,4 @@
+using Xunit;
 using FluentValidation;
 using FluentValidation.Results;
 using HRManagement.API.DTOs;
@@ -22,7 +23,6 @@ namespace HR.Test
             _jobValidator = new Mock<IValidator<JobDTO>>();
             _salaryValidator = new Mock<IValidator<SalaryDTO>>();
 
-            // by default validation passes
             _jobValidator.Setup(v => v.ValidateAsync(It.IsAny<JobDTO>(), default))
                 .ReturnsAsync(new ValidationResult());
             _salaryValidator.Setup(v => v.ValidateAsync(It.IsAny<SalaryDTO>(), default))
@@ -31,9 +31,7 @@ namespace HR.Test
             _service = new JobService(_repo.Object, _jobValidator.Object, _salaryValidator.Object);
         }
 
-        // ----- POSITIVE -----
-
-        [Fact]
+[Fact]
         public async Task GetAll_returns_all_jobs()
         {
             var jobs = new List<Job>
@@ -84,9 +82,7 @@ namespace HR.Test
             _repo.Verify(r => r.Add(It.IsAny<Job>()), Times.Once);
         }
 
-        // ----- NEGATIVE -----
-
-        [Fact]
+[Fact]
         public async Task GetById_throws_NotFound_when_missing()
         {
             _repo.Setup(r => r.GetById("NOPE")).ReturnsAsync((Job?)null);

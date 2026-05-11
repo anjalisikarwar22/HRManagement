@@ -1,6 +1,5 @@
 namespace HRManagement.API.DTOs.Departments
 {
-    // ========================= MAIN DTO =========================
 
     public class DepartmentDto
     {
@@ -13,9 +12,7 @@ namespace HRManagement.API.DTOs.Departments
         public decimal? LocationId { get; set; }
     }
 
-    // ========================= LIST DTO =========================
-
-    public class DepartmentListDto
+public class DepartmentListDto
     {
         public decimal DepartmentId { get; set; }
 
@@ -26,9 +23,7 @@ namespace HRManagement.API.DTOs.Departments
         public decimal? LocationId { get; set; }
     }
 
-    // ========================= CREATE DTO =========================
-
-    public class CreateDepartmentDto
+public class CreateDepartmentDto
     {
         public string DepartmentName { get; set; } = string.Empty;
 
@@ -37,9 +32,7 @@ namespace HRManagement.API.DTOs.Departments
         public decimal? LocationId { get; set; }
     }
 
-    // ========================= UPDATE DTO =========================
-
-    public class UpdateDepartmentDto
+public class UpdateDepartmentDto
     {
         public string DepartmentName { get; set; } = string.Empty;
 
@@ -48,18 +41,14 @@ namespace HRManagement.API.DTOs.Departments
         public decimal? LocationId { get; set; }
     }
 
-    // ========================= DROPDOWN DTO =========================
-
-    public class DepartmentDropdownDto
+public class DepartmentDropdownDto
     {
         public decimal DepartmentId { get; set; }
 
         public string DepartmentName { get; set; } = string.Empty;
     }
 
-    // ========================= PAGED DTO =========================
-
-    public class PagedDepartmentDto
+public class PagedDepartmentDto
     {
         public IEnumerable<DepartmentListDto> Items { get; set; }
             = new List<DepartmentListDto>();
@@ -71,9 +60,7 @@ namespace HRManagement.API.DTOs.Departments
         public int PageSize { get; set; }
     }
 
-    // ========================= SUMMARY DTO =========================
-
-    public class DepartmentSummaryDto
+public class DepartmentSummaryDto
     {
         public int TotalDepartments { get; set; }
 
