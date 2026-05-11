@@ -1,6 +1,11 @@
-using HRManagement.API.DTOs;
-
-
+using FluentValidation;
+using HRManagement.API.Data;
+using HRManagement.API.DTOs.Departments;
+using HRManagement.API.Filters;
+using HRManagement.API.Interfaces;
+using HRManagement.API.Middleware;
+using HRManagement.API.Repositories;
+using HRManagement.API.Services;
 using HRManagement.API.Validators;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,8 +21,14 @@ namespace HRManagement.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            // DbContext
-           
+            builder.Services.AddDbContext<HRContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+            builder.Services.AddScoped<IValidator<CreateDepartmentDto>, CreateDepartmentFluentValidator>();
+            builder.Services.AddScoped<IValidator<UpdateDepartmentDto>, UpdateDepartmentFluentValidator>();
+            builder.Services.AddScoped<DepartmentValidator>();
+            builder.Services.AddScoped<DepartmentHeaderFilter>();
 
             var app = builder.Build();
 
@@ -27,6 +38,7 @@ namespace HRManagement.API
                 app.UseSwaggerUI();
             }
 
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseHttpsRedirection();
             app.UseAuthorization();
             app.MapControllers();
@@ -34,3 +46,4 @@ namespace HRManagement.API
         }
     }
 }
+
