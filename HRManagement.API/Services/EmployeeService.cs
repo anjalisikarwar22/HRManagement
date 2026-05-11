@@ -1,4 +1,5 @@
-﻿using HRManagement.API.Data;
+﻿using AutoMapper;
+using HRManagement.API.Data;
 using HRManagement.API.DTOs.Employee;
 using HRManagement.API.Exceptions;
 using HRManagement.API.Models;
@@ -11,31 +12,27 @@ namespace HRManagement.API.Services
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly HRContext _context;
+        private readonly IMapper _mapper;
 
-        public EmployeeService(
-            IEmployeeRepository employeeRepository,
-            HRContext context)
+        public EmployeeService(IEmployeeRepository employeeRepository,HRContext context, IMapper mapper)
         {
             _employeeRepository = employeeRepository;
             _context = context;
+            _mapper = mapper;
+
         }
 
-        // =====================================
-        // GET ALL EMPLOYEES
-        // =====================================
 
         public async Task<IEnumerable<EmployeeResponseDto>> GetAllEmployeesAsync()
         {
             var employees = await _employeeRepository.GetAllAsync();
 
-            return employees.Select(MapEmployee);
+            return _mapper.Map<IEnumerable<EmployeeResponseDto>>(employees);
         }
 
-        // =====================================
-        // GET EMPLOYEE BY ID
-        // =====================================
+       
 
-        public async Task<EmployeeResponseDto> GetEmployeeByIdAsync(int id,int currentUserId, string currentRole)
+        public async Task<EmployeeResponseDto> GetEmployeeByIdAsync(decimal id,decimal currentUserId, string currentRole)
         {
             if (currentRole != "Admin" && currentUserId != id)
             {
@@ -49,12 +46,9 @@ namespace HRManagement.API.Services
                 throw new NotFoundException("Employee not found");
             }
 
-            return MapEmployee(employee);
+            return _mapper.Map<EmployeeResponseDto>(employee);
         }
 
-        // =====================================
-        // CREATE EMPLOYEE
-        // =====================================
 
         public async Task<EmployeeResponseDto> CreateEmployeeAsync( CreateEmployeeDto dto)
         {
@@ -95,37 +89,30 @@ namespace HRManagement.API.Services
 
             if (salary < job.MinSalary || salary > job.MaxSalary)
             {
-                throw new ValidationException(
-                    $"Salary must be between {job.MinSalary} and {job.MaxSalary}");
+                throw new ValidationException($"Salary must be between {job.MinSalary} and {job.MaxSalary}");
             }
 
-            var employee = new Employee
-            {
-                EmployeeId = await _context.Employees.MaxAsync(e => e.EmployeeId)+ 1,
-                FirstName = dto.FirstName,
-                LastName = dto.LastName,
-                Email = dto.Email,
-                JobId = dto.JobId,
-                DepartmentId = dto.DepartmentId,
-                ManagerId = dto.ManagerId,
-                Salary = salary,
-                CommissionPct = dto.CommissionPct,
-                HireDate = DateOnly.FromDateTime(DateTime.Now),
-                Password = null,
-                Role = null
-            };
+            var employee = _mapper.Map<Employee>(dto);
+
+
+            employee.EmployeeId= await _employeeRepository.GetMaxEmployeeIdAsync() + 1;
+
+            employee.Salary = salary;
+
+            employee.HireDate =DateOnly.FromDateTime( DateTime.Now);
+
+            employee.Password = null;
+
+            employee.Role = null;
 
             await _employeeRepository.AddAsync(employee);
             await _employeeRepository.SaveChangesAsync();
 
-            return MapEmployee(employee);
+            return _mapper.Map<EmployeeResponseDto>(employee);
         }
 
-        // =====================================
-        // UPDATE EMPLOYEE
-        // =====================================
-
-        public async Task<string> UpdateEmployeeAsync(int id,UpdateEmployeeDto dto)
+        
+        public async Task<string> UpdateEmployeeAsync(decimal id,UpdateEmployeeDto dto)
         {
             var employee = await _employeeRepository.GetByIdAsync(id);
 
@@ -175,13 +162,10 @@ namespace HRManagement.API.Services
 
                 DateOnly startDate;
 
-                // FIRST HISTORY ENTRY
 
                 if (lastHistory == null){
                     startDate =employee.HireDate;
                 }
-
-                // NEXT HISTORY ENTRY
 
                 else
                 {
@@ -203,15 +187,7 @@ namespace HRManagement.API.Services
                 await _context.JobHistories.AddAsync(jobHistory);
             }
 
-
-
-            employee.Email = dto.Email;
-            employee.JobId = dto.JobId;
-            employee.DepartmentId = dto.DepartmentId;
-            employee.ManagerId = dto.ManagerId;
-            employee.Salary = dto.Salary;
-            employee.CommissionPct = dto.CommissionPct;
-            employee.Role = dto.Role;
+            _mapper.Map(dto, employee);
 
             _employeeRepository.Update(employee);
 
@@ -220,33 +196,9 @@ namespace HRManagement.API.Services
             return "Employee updated successfully";
         }
 
-        // =====================================
-        // UPDATE ROLE
-        // =====================================
+        
 
-        public async Task<string> UpdateRoleAsync( int id,UpdateRoleDto dto)
-        {
-            var employee = await _employeeRepository.GetByIdAsync(id);
-
-            if (employee == null)
-            {
-                throw new NotFoundException("Employee not found");
-            }
-
-            employee.Role = dto.Role;
-
-            _employeeRepository.Update(employee);
-
-            await _employeeRepository.SaveChangesAsync();
-
-            return "Role updated successfully";
-        }
-
-        // =====================================
-        // MY PROFILE
-        // =====================================
-
-        public async Task<EmployeeResponseDto> GetMyProfileAsync(int employeeId)
+        public async Task<EmployeeResponseDto> GetMyProfileAsync(decimal employeeId)
         {
             var employee = await _employeeRepository.GetByIdAsync(employeeId);
 
@@ -255,14 +207,11 @@ namespace HRManagement.API.Services
                 throw new NotFoundException("Employee not found");
             }
 
-            return MapEmployee(employee);
+            return _mapper.Map<EmployeeResponseDto>(employee);
         }
 
-        // =====================================
-        // UPDATE MY PROFILE
-        // =====================================
-
-        public async Task<string> UpdateMyProfileAsync(int employeeId,UpdateMyProfileDto dto)
+        
+        public async Task<string> UpdateMyProfileAsync(decimal employeeId,UpdateMyProfileDto dto)
         {
             var employee = await _employeeRepository.GetByIdAsync(employeeId);
 
@@ -271,8 +220,7 @@ namespace HRManagement.API.Services
                 throw new NotFoundException("Employee not found");
             }
 
-            employee.Email = dto.Email;
-            employee.PhoneNumber = dto.PhoneNumber;
+            _mapper.Map(dto, employee);
 
             _employeeRepository.Update(employee);
 
@@ -281,12 +229,9 @@ namespace HRManagement.API.Services
             return "Profile updated successfully";
         }
 
-        // =====================================
-        // MY MANAGER
-        // =====================================
+        
 
-        public async Task<ManagerResponseDto> GetMyManagerAsync(
-            int employeeId)
+        public async Task<EmployeeLookupDto> GetMyManagerAsync(decimal employeeId)
         {
             var employee = await _employeeRepository.GetByIdAsync(employeeId);
 
@@ -300,127 +245,46 @@ namespace HRManagement.API.Services
                 throw new NotFoundException("Manager not assigned");
             }
 
-            return new ManagerResponseDto
-            {
-                EmployeeId = employee.Manager.EmployeeId,
-                FullName =employee.Manager.FirstName + " " + employee.Manager.LastName
-            };
+            return _mapper.Map< EmployeeLookupDto>(employee.Manager);
         }
 
-        // =====================================
-        // MY SUBORDINATES
-        // =====================================
+        
 
-        public async Task<IEnumerable<SubordinateResponseDto>>
-            GetMySubordinatesAsync(int employeeId)
+        public async Task<IEnumerable<EmployeeSummaryDto>> GetMySubordinatesAsync(decimal employeeId)
         {
             var employees = await _employeeRepository.GetSubordinatesAsync(employeeId);
 
-            return employees.Select(e => new SubordinateResponseDto
-            {
-                EmployeeId = e.EmployeeId,
-                FullName = e.FirstName + " " + e.LastName,
-                Email = e.Email,
-                JobTitle = e.Job?.JobTitle
-            });
+            return _mapper.Map< IEnumerable<EmployeeSummaryDto>>(employees);
         }
-
-        // =====================================
-        // GET MANAGERS
-        // =====================================
 
         public async Task<IEnumerable<EmployeeLookupDto>> GetManagersAsync()
         {
             var managers = await _employeeRepository.GetManagersAsync();
 
-            return managers.Select(e => new EmployeeLookupDto
-            {
-                EmployeeId = e.EmployeeId,
-                FullName = e.FirstName + " " + e.LastName
-            });
+            return _mapper.Map<IEnumerable<EmployeeLookupDto>>(managers);
         }
 
-        // =====================================
-        // SEARCH EMPLOYEES
-        // =====================================
+        
 
-        public async Task<IEnumerable<SearchEmployeeDto>> SearchEmployeesAsync(string name)
+        public async Task<IEnumerable<EmployeeSummaryDto>> SearchEmployeesAsync(string name)
         {
             var employees =await _employeeRepository.SearchEmployeesAsync(name);
 
-            return employees.Select(e => new SearchEmployeeDto
-            {
-                EmployeeId = e.EmployeeId,
-                FullName = e.FirstName + " " + e.LastName,
-                Email = e.Email,
-                DepartmentName = e.Department?.DepartmentName,
-                JobTitle = e.Job?.JobTitle
-            });
+            return _mapper.Map<IEnumerable<EmployeeSummaryDto>>(employees);
         }
 
-        // =====================================
-        // EMPLOYEES BY DEPARTMENT
-        // =====================================
+        
+        
 
-        public async Task<IEnumerable<SearchEmployeeDto>> GetEmployeesByDepartmentAsync(short departmentId)
+        public async Task<IEnumerable<EmployeeSummaryDto>> GetEmployeesByDepartmentAsync(short departmentId)
         {
             var employees = await _employeeRepository.GetEmployeesByDepartmentAsync(departmentId);
 
-            return employees.Select(e => new SearchEmployeeDto
-            {
-                EmployeeId = e.EmployeeId,
-                FullName = e.FirstName + " " + e.LastName,
-                Email = e.Email,
-                DepartmentName = e.Department?.DepartmentName,
-                JobTitle = e.Job?.JobTitle
-            });
+            return _mapper.Map<IEnumerable<EmployeeSummaryDto>>(employees);
         }
 
-        // =====================================
-        // MAP EMPLOYEE DTO
-        // =====================================
+        
 
-        private EmployeeResponseDto MapEmployee(Employee employee)
-        {
-            decimal totalSalary = employee.Salary ?? 0;
-
-            if (employee.CommissionPct != null)
-            {
-                totalSalary +=( employee.Salary ?? 0) * (employee.CommissionPct.Value);
-            }
-
-            return new EmployeeResponseDto
-            {
-                EmployeeId = employee.EmployeeId,
-
-                FullName =employee.FirstName + " " + employee.LastName,
-
-                Email = employee.Email,
-
-                JobId = employee.JobId,
-
-                JobTitle = employee.Job?.JobTitle,
-
-                DepartmentId = employee.DepartmentId,
-
-                DepartmentName =employee.Department?.DepartmentName,
-
-                ManagerId = employee.ManagerId,
-
-                ManagerName =
-                    employee.Manager != null 
-                    ? employee.Manager.FirstName +" " +employee.Manager.LastName : null,
-
-                Salary = employee.Salary,
-
-                CommissionPct = employee.CommissionPct,
-
-                TotalSalary = totalSalary,
-
-                Role = employee.Role,
-
-                HireDate = employee.HireDate
-            };
-        }
+       
     }
 }

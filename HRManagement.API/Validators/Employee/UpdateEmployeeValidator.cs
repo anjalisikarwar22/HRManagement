@@ -12,25 +12,17 @@ namespace HRManagement.API.Validators.Employee
                 .NotEmpty()
                 .EmailAddress();
 
-            RuleFor(x => x.JobId)
-                .NotEmpty();
+            RuleFor(x => x.JobId).NotEmpty();
 
-            RuleFor(x => x.DepartmentId)
-                .NotNull();
+            RuleFor(x => x.DepartmentId).NotNull();
 
-            RuleFor(x => x.Salary)
-                .GreaterThan(0);
+            RuleFor(x => x.Salary).GreaterThan(0);
 
-            RuleFor(x => x.CommissionPct)
-                .InclusiveBetween(0, 1)
-                .When(x => x.CommissionPct.HasValue);
+            RuleFor(x => x.CommissionPct).InclusiveBetween(0, 1)
+                   .When(x => x.CommissionPct.HasValue);
 
-            RuleFor(x => x.Role)
-                .Must(role =>
-                    role == "Admin" ||
-                    role == "Employee")
-                .WithMessage(
-                    "Role must be Admin or Employee");
+            RuleFor(x => x.Role).Must(role =>role == "Admin" || role == "Employee")
+                  .WithMessage("Role must be Admin or Employee");
         }
     }
 

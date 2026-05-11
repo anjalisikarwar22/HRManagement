@@ -19,9 +19,7 @@ namespace HRManagement.API.Controllers
             _employeeService = employeeService;
         }
 
-        // =====================================
-        // GET ALL EMPLOYEES
-        // =====================================
+        
 
         [Authorize(Roles = "Admin")]
         [HttpGet]
@@ -36,16 +34,12 @@ namespace HRManagement.API.Controllers
                     employees));
         }
 
-        // =====================================
-        // GET EMPLOYEE BY ID
-        // =====================================
+        
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetEmployeeById(int id)
+        public async Task<IActionResult> GetEmployeeById(decimal id)
         {
-            var currentUserId =
-                int.Parse(
-                    User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var currentUserId =int.Parse( User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             var currentRole =User.FindFirstValue(ClaimTypes.Role);
 
@@ -58,9 +52,7 @@ namespace HRManagement.API.Controllers
                     employee));
         }
 
-        // =====================================
-        // CREATE EMPLOYEE
-        // =====================================
+        
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
@@ -75,13 +67,11 @@ namespace HRManagement.API.Controllers
                     employee));
         }
 
-        // =====================================
-        // UPDATE EMPLOYEE
-        // =====================================
+        
 
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateEmployee( int id,UpdateEmployeeDto dto)
+        public async Task<IActionResult> UpdateEmployee( decimal id,UpdateEmployeeDto dto)
         {
             var message =await _employeeService.UpdateEmployeeAsync(id, dto);
 
@@ -92,34 +82,11 @@ namespace HRManagement.API.Controllers
                     null));
         }
 
-        // =====================================
-        // UPDATE ROLE
-        // =====================================
-
-        [Authorize(Roles = "Admin")]
-        [HttpPut("{id}/role")]
-        public async Task<IActionResult> UpdateRole(int id,UpdateRoleDto dto)
-        {
-            var message =await _employeeService.UpdateRoleAsync(id,dto);
-
-            return Ok(
-                new ApiResponse<object>(
-                    true,
-                    message,
-                    null));
-        }
-
-        // =====================================
-        // GET MY PROFILE
-        // =====================================
 
         [HttpGet("me")]
         public async Task<IActionResult> GetMyProfile()
         {
-            var employeeId =
-                int.Parse(
-                    User.FindFirstValue(
-                        ClaimTypes.NameIdentifier));
+            var employeeId =int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             var employee = await _employeeService.GetMyProfileAsync(employeeId);
 
@@ -130,15 +97,12 @@ namespace HRManagement.API.Controllers
                     employee));
         }
 
-        // =====================================
-        // UPDATE MY PROFILE
-        // =====================================
+        
 
         [HttpPut("me")]
         public async Task<IActionResult> UpdateMyProfile( UpdateMyProfileDto dto)
         {
-            var employeeId = int.Parse(User.FindFirstValue(
-                             ClaimTypes.NameIdentifier));
+            var employeeId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             var message =await _employeeService.UpdateMyProfileAsync(employeeId, dto);
 
@@ -149,15 +113,12 @@ namespace HRManagement.API.Controllers
                     null));
         }
 
-        // =====================================
-        // GET MY MANAGER
-        // =====================================
+       
 
         [HttpGet("my-manager")]
         public async Task<IActionResult> GetMyManager()
         {
-            var employeeId =int.Parse(User.FindFirstValue(
-                            ClaimTypes.NameIdentifier));
+            var employeeId =int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             var manager = await _employeeService.GetMyManagerAsync(employeeId);
 
@@ -168,20 +129,14 @@ namespace HRManagement.API.Controllers
                     manager));
         }
 
-        // =====================================
-        // GET MY SUBORDINATES
-        // =====================================
+        
 
         [HttpGet("my-subordinates")]
         public async Task<IActionResult> GetMySubordinates()
         {
-            var employeeId =
-                int.Parse(
-                    User.FindFirstValue(
-                        ClaimTypes.NameIdentifier));
+            var employeeId =int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-            var employees =await _employeeService.GetMySubordinatesAsync(
-                    employeeId);
+            var employees =await _employeeService.GetMySubordinatesAsync(employeeId);
 
             return Ok(
                 new ApiResponse<object>(
@@ -190,9 +145,7 @@ namespace HRManagement.API.Controllers
                     employees));
         }
 
-        // =====================================
-        // GET MANAGERS
-        // =====================================
+        
 
         [Authorize(Roles = "Admin")]
         [HttpGet("managers")]
@@ -207,9 +160,7 @@ namespace HRManagement.API.Controllers
                     managers));
         }
 
-        // =====================================
-        // SEARCH EMPLOYEES
-        // =====================================
+        
 
         [Authorize(Roles = "Admin")]
         [HttpGet("search")]
@@ -224,9 +175,7 @@ namespace HRManagement.API.Controllers
                     employees));
         }
 
-        // =====================================
-        // EMPLOYEES BY DEPARTMENT
-        // =====================================
+        
 
         [Authorize(Roles = "Admin")]
         [HttpGet("by-department/{departmentId}")]

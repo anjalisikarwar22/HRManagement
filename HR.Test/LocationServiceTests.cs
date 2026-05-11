@@ -1,5 +1,7 @@
-﻿using HRManagement.API.DTOs.Location;
+﻿using AutoMapper;
+using HRManagement.API.DTOs.Location;
 using HRManagement.API.Exceptions;
+using HRManagement.API.Mappings;
 using HRManagement.API.Models;
 using HRManagement.API.Repository;
 using HRManagement.API.Services;
@@ -16,26 +18,30 @@ namespace HR.Test
 
     public class LocationServiceTests
     {
-        private readonly
-            Mock<ILocationRepository>
-            _repositoryMock;
+        private readonly Mock<ILocationRepository>_repositoryMock;
 
-        private readonly
-            LocationService
-            _service;
+        private readonly LocationService _service;
+        private readonly IMapper _mapper;
 
         public LocationServiceTests()
         {
             _repositoryMock = new Mock<ILocationRepository>();
 
-            _service =new LocationService(_repositoryMock.Object);
+            var config =new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<LocationMappingProfile>();
+            });
+
+            _mapper = config.CreateMapper();
+
+            _service =new LocationService(_repositoryMock.Object, _mapper);
         }
 
 
 
         [Fact]
         public async Task
-    GetByIdAsync_ShouldReturnLocation()
+        GetByIdAsync_ShouldReturnLocation()
         {
             // Arrange
 
@@ -81,13 +87,11 @@ namespace HR.Test
         {
             // Arrange
 
-            var dto =new CreateLocationDto{
-                    LocationId = 2300,
-                    City = "Delhi"
-                };
+            var dto= new LocationRequestDto{
+                City = "Delhi"
+            };
 
-            _repositoryMock.Setup(x =>x.GetByIdAsync(2300))
-                           .ReturnsAsync((Location)null);
+            
 
             _repositoryMock.Setup(x =>x.GetMaxLocationIdAsync())
                            .ReturnsAsync(2200);
@@ -105,23 +109,7 @@ namespace HR.Test
 
 
 
-        [Fact]
-        public async Task
-        CreateAsync_ShouldThrowDuplicateException()
-        {
-            // Arrange
-
-            var dto = new CreateLocationDto{
-                    LocationId = 1000
-                };
-
-            _repositoryMock.Setup(x =>x.GetByIdAsync(1000))
-                .ReturnsAsync(new Location());
-
-            // Act + Assert
-
-            await Assert.ThrowsAsync<BadRequestException>(() =>_service.CreateAsync(dto));
-        }
+        
 
 
 
@@ -138,8 +126,7 @@ namespace HR.Test
                     City = "Old City"
                 };
 
-            var dto =new UpdateLocationDto
-                {
+            var dto =new UpdateLocationDto{
                     City = "New Delhi",
                     StreetAddress = "Street 1",
                     PostalCode = "110001",
@@ -170,16 +157,14 @@ namespace HR.Test
         {
             // Arrange
 
-            var location =new Location
-                {
-                    LocationId = 1000,
-                    City = "Old City"
-                };
+            var location =new Location{
+                LocationId = 1000,
+                City = "Old City"
+            };
 
-            var dto =new UpdateLocationDto
-                {
-                    City = "Delhi"
-                };
+            var dto =new UpdateLocationDto{
+                City = "Delhi"
+            };
 
             _repositoryMock.Setup(x => x.GetByIdAsync(1000))
                            .ReturnsAsync(location);
@@ -225,12 +210,9 @@ namespace HR.Test
         public async Task
         GetByCityAsync_ShouldThrowNotFound()
         {
-            // Arrange
-
-            _repositoryMock.Setup(x =>x.GetByCityAsync("Unknown"))
+            _repositoryMock.Setup(x =>x.GetByCityAsync("Unknown")) 
                            .ReturnsAsync((Location)null);
 
-            // Act + Assert
 
             await Assert.ThrowsAsync<NotFoundException>(() =>_service.GetByCityAsync("Unknown"));
         }

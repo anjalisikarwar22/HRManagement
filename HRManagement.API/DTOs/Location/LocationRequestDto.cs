@@ -2,7 +2,7 @@
 
 namespace HRManagement.API.DTOs.Location
 {
-    public class CreateLocationDto
+    public class LocationRequestDto
     {
         public string City { get; set; } = string.Empty;
 

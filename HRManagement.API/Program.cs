@@ -86,7 +86,6 @@ namespace HRManagement.API
                 ));
 
             builder.Services.AddScoped<ILocationRepository, LocationRepository>();
-            
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
 
@@ -98,9 +97,14 @@ namespace HRManagement.API
 
             builder.Services.AddScoped<JwtService>();
 
+
+
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+
             builder.Services.AddFluentValidationAutoValidation();
 
-            builder.Services.AddValidatorsFromAssemblyContaining<CreateLocationValidator>();
+            builder.Services.AddValidatorsFromAssemblyContaining<LocationRequestValidator>();
             builder.Services.AddValidatorsFromAssemblyContaining<CreateEmployeeValidator>();
 
             // Custom Validation Response

@@ -15,17 +15,11 @@ namespace HRManagement.API.Controllers
         private readonly HRContext _context;
         private readonly JwtService _jwtService;
 
-        public AuthController(
-            HRContext context,
-            JwtService jwtService)
+        public AuthController( HRContext context, JwtService jwtService)
         {
             _context = context;
             _jwtService = jwtService;
         }
-
-        // =========================
-        // REGISTER
-        // =========================
 
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto dto)
@@ -43,7 +37,6 @@ namespace HRManagement.API.Controllers
                 });
             }
 
-            // already activated
             if (employee.Password != null)
             {
                 return BadRequest(new
@@ -52,11 +45,8 @@ namespace HRManagement.API.Controllers
                 });
             }
 
-            // hash password
-            employee.Password =
-                BCrypt.Net.BCrypt.HashPassword(dto.Password);
+            employee.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
-            // default role
             employee.Role = "Employee";
 
             await _context.SaveChangesAsync();
@@ -67,16 +57,12 @@ namespace HRManagement.API.Controllers
             });
         }
 
-        // =========================
-        // LOGIN
-        // =========================
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
             var employee = await _context.Employees
-                .FirstOrDefaultAsync(e =>
-                    e.Email == dto.Email);
+                .FirstOrDefaultAsync(e =>e.Email == dto.Email);
 
             if (employee == null)
             {
@@ -86,7 +72,6 @@ namespace HRManagement.API.Controllers
                 });
             }
 
-            // account not activated
             if (employee.Password == null)
             {
                 return Unauthorized(new
@@ -95,10 +80,7 @@ namespace HRManagement.API.Controllers
                 });
             }
 
-            bool validPassword =
-                BCrypt.Net.BCrypt.Verify(
-                    dto.Password,
-                    employee.Password);
+            bool validPassword = BCrypt.Net.BCrypt.Verify(dto.Password,employee.Password);
 
             if (!validPassword)
             {
@@ -119,23 +101,16 @@ namespace HRManagement.API.Controllers
             });
         }
 
-        // =========================
-        // CURRENT USER
-        // =========================
-
         [Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> Me()
         {
-            var employeeId =
-                decimal.Parse(User.FindFirstValue(
-                    ClaimTypes.NameIdentifier));
+            var employeeId =decimal.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             var employee = await _context.Employees
                 .Include(e => e.Job)
                 .Include(e => e.Department)
-                .FirstOrDefaultAsync(e =>
-                    e.EmployeeId == employeeId);
+                .FirstOrDefaultAsync(e =>e.EmployeeId == employeeId);
 
             if (employee == null)
             {

@@ -9,14 +9,12 @@ namespace HRManagement.API.Middleware
     {
         private readonly RequestDelegate _next;
 
-        public ExceptionMiddleware(
-            RequestDelegate next)
+        public ExceptionMiddleware(RequestDelegate next)
         {
             _next = next;
         }
 
-        public async Task InvokeAsync(
-            HttpContext context)
+        public async Task InvokeAsync( HttpContext context)
         {
             try
             {
@@ -30,43 +28,34 @@ namespace HRManagement.API.Middleware
             }
         }
 
-        private static Task HandleExceptionAsync(
-            HttpContext context,
-            Exception exception)
+        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             HttpStatusCode statusCode;
 
             switch (exception)
             {
-                case BadRequestException:
-                    statusCode =
-                        HttpStatusCode.BadRequest;
+                case BadRequestException:  
+                    statusCode =  HttpStatusCode.BadRequest;
                     break;
 
-                case NotFoundException:
-                    statusCode =
-                        HttpStatusCode.NotFound;
+                case NotFoundException: 
+                    statusCode = HttpStatusCode.NotFound;
                     break;
 
-                case UnauthorizedException:
-                    statusCode =
-                        HttpStatusCode.Unauthorized;
+                case UnauthorizedException: 
+                    statusCode = HttpStatusCode.Unauthorized;
                     break;
 
                 case ForbiddenException:
-                    statusCode =
-                        HttpStatusCode.Forbidden;
+                    statusCode = HttpStatusCode.Forbidden;
                     break;
 
                 case ValidationException:
-                    statusCode =
-                        HttpStatusCode.BadRequest;
+                    statusCode = HttpStatusCode.BadRequest;
                     break;
 
                 default:
-                    statusCode =
-                        HttpStatusCode
-                        .InternalServerError;
+                    statusCode = HttpStatusCode .InternalServerError;
                     break;
             }
 
@@ -76,17 +65,13 @@ namespace HRManagement.API.Middleware
                     exception.Message,
                     null);
 
-            var jsonResponse =
-                JsonSerializer.Serialize(response);
+            var jsonResponse = JsonSerializer.Serialize(response);
 
-            context.Response.ContentType =
-                "application/json";
+            context.Response.ContentType =  "application/json";
 
-            context.Response.StatusCode =
-                (int)statusCode;
+            context.Response.StatusCode = (int)statusCode;
 
-            return context.Response
-                .WriteAsync(jsonResponse);
+            return context.Response.WriteAsync(jsonResponse);
         }
     }
 

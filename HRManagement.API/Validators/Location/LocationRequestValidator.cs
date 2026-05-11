@@ -3,9 +3,9 @@ using HRManagement.API.DTOs.Location;
 
 namespace HRManagement.API.Validators.Location
 {
-    public class UpdateLocationValidator : AbstractValidator<UpdateLocationDto>
+    public class LocationRequestValidator : AbstractValidator<LocationRequestDto>
     {
-        public UpdateLocationValidator()
+        public LocationRequestValidator()
         {
             RuleFor(x => x.City)
                 .NotEmpty()
@@ -13,33 +13,23 @@ namespace HRManagement.API.Validators.Location
                 .MaximumLength(30)
                 .WithMessage("City cannot exceed 30 characters");
 
-            RuleFor(x => x.City)
-               .NotEmpty()
-               .WithMessage("City is required")
-               .MaximumLength(30)
-               .WithMessage("City cannot exceed 30 characters");
 
-
-            // Street Address Validation
             RuleFor(x => x.StreetAddress)
                 .NotEmpty()
                 .MaximumLength(40)
                 .WithMessage("Street Address cannot exceed 40 characters");
 
 
-            // Postal Code Validation
             RuleFor(x => x.PostalCode)
                 .MaximumLength(12)
                 .WithMessage("Postal Code cannot exceed 12 characters")
                 .When(x => !string.IsNullOrWhiteSpace(x.PostalCode));
 
-            // State Province Validation
             RuleFor(x => x.StateProvince)
                 .MaximumLength(25)
                 .WithMessage("State Province cannot exceed 25 characters")
                 .When(x => !string.IsNullOrWhiteSpace(x.StateProvince));
 
-            // Country Id Validation
             RuleFor(x => x.CountryId)
                 .NotEmpty()
                 .MaximumLength(2)

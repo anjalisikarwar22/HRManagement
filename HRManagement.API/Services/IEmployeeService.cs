@@ -4,55 +4,27 @@ namespace HRManagement.API.Services
 {
     public interface IEmployeeService
     {
-        Task<IEnumerable<EmployeeResponseDto>>
-            GetAllEmployeesAsync();
+        Task<IEnumerable<EmployeeResponseDto>> GetAllEmployeesAsync();
 
-        Task<EmployeeResponseDto>
-            GetEmployeeByIdAsync(
-                int id,
-                int currentUserId,
-                string currentRole);
+        Task<EmployeeResponseDto> GetEmployeeByIdAsync(decimal id, decimal currentUserId,string currentRole);
 
-        Task<EmployeeResponseDto>
-            CreateEmployeeAsync(
-                CreateEmployeeDto dto);
+        Task<EmployeeResponseDto>  CreateEmployeeAsync(CreateEmployeeDto dto);
 
-        Task<string>
-            UpdateEmployeeAsync(
-                int id,
-                UpdateEmployeeDto dto);
+        Task<string> UpdateEmployeeAsync(decimal id,UpdateEmployeeDto dto);
 
-        
 
-        Task<string>
-            UpdateRoleAsync(
-                int id,
-                UpdateRoleDto dto);
+        Task<EmployeeResponseDto> GetMyProfileAsync(decimal employeeId);
 
-        Task<EmployeeResponseDto>
-            GetMyProfileAsync(int employeeId);
+        Task<string> UpdateMyProfileAsync(decimal employeeId, UpdateMyProfileDto dto);
 
-        Task<string>
-            UpdateMyProfileAsync(
-                int employeeId,
-                UpdateMyProfileDto dto);
+        Task<EmployeeLookupDto> GetMyManagerAsync(decimal employeeId);
 
-        Task<ManagerResponseDto>
-            GetMyManagerAsync(int employeeId);
+        Task<IEnumerable<EmployeeSummaryDto>> GetMySubordinatesAsync(decimal employeeId);
 
-        Task<IEnumerable<SubordinateResponseDto>>
-            GetMySubordinatesAsync(
-                int employeeId);
+        Task<IEnumerable<EmployeeLookupDto>> GetManagersAsync();
 
-        Task<IEnumerable<EmployeeLookupDto>>
-            GetManagersAsync();
+        Task<IEnumerable<EmployeeSummaryDto>> SearchEmployeesAsync(string name);
 
-        Task<IEnumerable<SearchEmployeeDto>>
-            SearchEmployeesAsync(string name);
-
-        Task<IEnumerable<SearchEmployeeDto>>
-            GetEmployeesByDepartmentAsync(
-                short departmentId);
+        Task<IEnumerable<EmployeeSummaryDto>> GetEmployeesByDepartmentAsync(short departmentId);
     }
-
 }
