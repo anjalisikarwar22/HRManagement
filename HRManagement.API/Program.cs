@@ -1,11 +1,9 @@
-﻿using AutoMapper;                          // ← ADD THIS
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using HRManagement.API.Common;
 using HRManagement.API.Data;
 using HRManagement.API.Filters;
 using HRManagement.API.Interfaces;
-using HRManagement.API.Mappings;           // ← ADD THIS
 using HRManagement.API.Middleware;
 using HRManagement.API.Repositories;
 using HRManagement.API.Repository;
@@ -63,13 +61,9 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// Database
 builder.Services.AddDbContext<HRContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration
-            .GetConnectionString("HRConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("HRConnection")));
 
-// Repositories
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<IJobHistoryRepository, JobHistoryRepository>();
 builder.Services.AddScoped<IRegionRepository, RegionRepository>();
@@ -78,7 +72,6 @@ builder.Services.AddScoped<ILocationRepository, LocationRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 
-// Services
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<IJobHistoryService, JobHistoryService>();
 builder.Services.AddScoped<IRegionService, RegionService>();
@@ -89,17 +82,6 @@ builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<JwtService>();
 
-// ── AUTOMAPPER ────────────────────────────────────────────
-// ADD THIS BLOCK
-// Registers both mapping profiles
-// RegionMappingProfile  = Region  ↔ RegionDto
-// CountryMappingProfile = Country ↔ CountryDto
-builder.Services.AddAutoMapper(
-    typeof(RegionMappingProfile),
-    typeof(CountryMappingProfile));
-// ─────────────────────────────────────────────────────────
-
-// Fluent Validation
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<JobDtoValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateRegionDtoValidator>();
@@ -128,22 +110,18 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     };
 });
 
-builder.Services.AddAuthentication(
-    JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.TokenValidationParameters =
-            new TokenValidationParameters
-            {
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey =
-                    new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(
-                            builder.Configuration["Jwt:Key"]!))
-            };
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+        };
     });
 
 builder.Services.AddAuthorization();

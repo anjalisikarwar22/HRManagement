@@ -1,12 +1,14 @@
-using Xunit;
+﻿using AutoMapper;
 using FluentValidation;
 using FluentValidation.Results;
 using HRManagement.API.DTOs;
 using HRManagement.API.Exceptions;
+using HRManagement.API.Mappings;
 using HRManagement.API.Models;
 using HRManagement.API.Repository;
 using HRManagement.API.Services;
 using Moq;
+using Xunit;
 
 namespace HR.Test
 {
@@ -26,7 +28,8 @@ namespace HR.Test
             _validator.Setup(v => v.ValidateAsync(It.IsAny<JobHistoryDTO>(), default))
                 .ReturnsAsync(new ValidationResult());
 
-            _service = new JobHistoryService(_repo.Object, _jobRepo.Object, _validator.Object);
+            var mapper = new MapperConfiguration(c => c.AddProfile<JobHistoryProfile>()).CreateMapper();
+            _service = new JobHistoryService(_repo.Object, _jobRepo.Object, mapper, _validator.Object);
         }
 
         private static JobHistory SampleHistory() => new JobHistory
@@ -38,7 +41,7 @@ namespace HR.Test
             DepartmentId = 60
         };
 
-[Fact]
+        [Fact]
         public async Task GetAll_returns_all_records()
         {
             var list = new List<JobHistory> { SampleHistory(), SampleHistory() };
@@ -98,7 +101,7 @@ namespace HR.Test
             _repo.Verify(r => r.Add(It.IsAny<JobHistory>()), Times.Once);
         }
 
-[Fact]
+        [Fact]
         public async Task GetByJob_throws_NotFound_when_job_missing()
         {
             _jobRepo.Setup(r => r.GetById("NOPE")).ReturnsAsync((Job?)null);
@@ -156,3 +159,4 @@ namespace HR.Test
         }
     }
 }
+

@@ -1,16 +1,17 @@
 using AutoMapper;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using HRManagement.API.Models;
 using HRManagement.API.DTOs;
+using HRManagement.API.Exceptions;
+using HRManagement.API.Models;
 using HRManagement.API.Repository;
 using HRManagement.API.Services;
-using HRManagement.API.Exceptions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System.Diagnostics.Metrics;
 
 namespace HR.Test
 {
     [TestClass]
-    public class CountryServiceTests   
+    public class CountryServiceTests    
     {
         private Mock<ICountryRepository>? _mockCountryRepo;
         private Mock<IRegionRepository>? _mockRegionRepo;
@@ -30,6 +31,7 @@ namespace HR.Test
                 _mockMapper.Object);
         }
 
+
         [TestMethod]
         public void GetAllCountries_WhenCalled_ReturnsCorrectDtos()
         {
@@ -37,7 +39,7 @@ namespace HR.Test
             {
                 new()
                 {
-                    CountryId   = "US  ", 
+                    CountryId   = "US  ",
                     CountryName = "United States",
                     RegionId    = 2,
                     Region      = new()
@@ -109,6 +111,7 @@ namespace HR.Test
         [TestMethod]
         public void CreateCountry_WithValidData_UppercasesAndSaves()
         {
+         
             var dto = new CreateCountryDto
             {
                 CountryId = "pk",  
@@ -120,6 +123,7 @@ namespace HR.Test
                 .Setup(r => r.ExistsById(3))
                 .Returns(true);
 
+          
             _mockCountryRepo!
                 .Setup(r => r.ExistsById("PK"))
                 .Returns(false);
@@ -155,6 +159,7 @@ namespace HR.Test
         [ExpectedException(typeof(ValidationException))]
         public void CreateCountry_WhenRegionNotFound_ThrowsValidationException()
         {
+           
             var dto = new CreateCountryDto
             {
                 CountryId = "XX",
@@ -166,10 +171,10 @@ namespace HR.Test
                 .Setup(r => r.ExistsById(999))
                 .Returns(false);
 
-            
             _service!.CreateCountry(dto);
 
         }
+
 
         [TestMethod]
         [ExpectedException(typeof(DuplicateException))]
@@ -193,5 +198,6 @@ namespace HR.Test
             _service!.CreateCountry(dto);
 
         }
-    }
+
+    }   
 }

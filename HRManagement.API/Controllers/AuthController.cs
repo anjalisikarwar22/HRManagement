@@ -23,6 +23,7 @@ namespace HRManagement.API.Controllers
             _jwtService = jwtService;
         }
 
+        [HttpPost("register")]
 [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto dto)
         {
@@ -46,11 +47,16 @@ namespace HRManagement.API.Controllers
                     message = "Account already activated"
                 });
             }
-
             employee.Password =
                 BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
-            employee.Role = "Employee";
+            employee.Password =
+                BCrypt.Net.BCrypt.HashPassword(dto.Password);
+            if (string.IsNullOrEmpty(employee.Role))
+            {
+
+                employee.Role = "Employee";
+            }
 
             await _context.SaveChangesAsync();
 
@@ -60,6 +66,7 @@ namespace HRManagement.API.Controllers
             });
         }
 
+        [HttpPost("login")]
 [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
@@ -83,10 +90,15 @@ namespace HRManagement.API.Controllers
                 });
             }
 
-            bool validPassword =
-                BCrypt.Net.BCrypt.Verify(
-                    dto.Password,
-                    employee.Password);
+            bool validPassword;
+            if (employee.Password.StartsWith("$2"))
+            {
+                validPassword = BCrypt.Net.BCrypt.Verify(dto.Password, employee.Password);
+            }
+            else
+            {
+                validPassword = employee.Password == dto.Password;
+            }
 
             if (!validPassword)
             {
@@ -107,6 +119,7 @@ namespace HRManagement.API.Controllers
             });
         }
 
+        [Authorize]
 [Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> Me()
@@ -156,3 +169,4 @@ namespace HRManagement.API.Controllers
         }
     }
 }
+

@@ -23,7 +23,11 @@ namespace HRManagement.API.Services
             _context =context;
         }
 
+<<<<<<< HEAD
+        public async Task<string>
+=======
 public async Task<string>
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
             RegisterAsync(RegisterDto dto)
         {
             var employee =await _context.Employees
@@ -50,7 +54,11 @@ public async Task<string>
             return  "Account activated successfully";
         }
 
+<<<<<<< HEAD
+        public async Task<object> LoginAsync(LoginDto dto)
+=======
 public async Task<object> LoginAsync(LoginDto dto)
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
         {
             var employee = await _employeeRepository.GetByEmailAsync(dto.Email);
 
@@ -64,7 +72,15 @@ public async Task<object> LoginAsync(LoginDto dto)
                 throw new UnauthorizedException("Account not activated");
             }
 
-            bool validPassword =BCrypt.Net.BCrypt.Verify( dto.Password,employee.Password);
+            bool validPassword;
+            if (employee.Password.StartsWith("$2"))
+            {
+                validPassword = BCrypt.Net.BCrypt.Verify(dto.Password, employee.Password);
+            }
+            else
+            {
+                validPassword = employee.Password == dto.Password;
+            }
 
             if (!validPassword)
             {
@@ -85,7 +101,11 @@ public async Task<object> LoginAsync(LoginDto dto)
             };
         }
 
+<<<<<<< HEAD
+        public async Task<object>
+=======
 public async Task<object>
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
             GetCurrentUserAsync(decimal employeeId)
         {
             var employee =await _context.Employees
@@ -134,3 +154,4 @@ public async Task<object>
 
     }
 }
+

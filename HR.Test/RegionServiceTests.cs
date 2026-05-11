@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using HRManagement.API.Models;
@@ -51,6 +51,7 @@ namespace HR.Test
                     fakeRegions))
                 .Returns(fakeDtos);
 
+            
             var result = _service!
                 .GetAllRegions()
                 .ToList();
@@ -62,6 +63,7 @@ namespace HR.Test
                 result[0].RegionName,
                 "First region should be Europe");
         }
+
 
         [TestMethod]
         public void CreateRegion_WithValidName_CallsAddAndSave()
@@ -95,6 +97,7 @@ namespace HR.Test
                 "SaveChanges should be called once");
         }
 
+
         [TestMethod]
         [ExpectedException(typeof(DuplicateException))]
         public void CreateRegion_WhenDuplicate_ThrowsDuplicateException()
@@ -110,6 +113,7 @@ namespace HR.Test
 
             _service!.CreateRegion(dto);
         }
+
 
         [TestMethod]
         [ExpectedException(typeof(NotFoundException))]
@@ -127,5 +131,5 @@ namespace HR.Test
             _service!.UpdateRegion(99, dto);
         }
 
-    }
+    }   
 }

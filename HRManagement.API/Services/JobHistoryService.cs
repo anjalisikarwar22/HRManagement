@@ -1,3 +1,4 @@
+using AutoMapper;
 using FluentValidation;
 using HRManagement.API.DTOs;
 using HRManagement.API.Exceptions;
@@ -11,19 +12,25 @@ namespace HRManagement.API.Services
     {
         private readonly IJobHistoryRepository _repo;
         private readonly IJobRepository _jobRepo;
+        private readonly IMapper _mapper;
         private readonly IValidator<JobHistoryDTO> _validator;
 
-        public JobHistoryService(IJobHistoryRepository repo, IJobRepository jobRepo, IValidator<JobHistoryDTO> validator)
+        public JobHistoryService(
+            IJobHistoryRepository repo,
+            IJobRepository jobRepo,
+            IMapper mapper,
+            IValidator<JobHistoryDTO> validator)
         {
             _repo = repo;
             _jobRepo = jobRepo;
+            _mapper = mapper;
             _validator = validator;
         }
 
         public async Task<List<JobHistoryDTO>> GetAll()
         {
             var list = await _repo.GetAll();
-            return list.Select(ToDto).ToList();
+            return _mapper.Map<List<JobHistoryDTO>>(list);
         }
 
         public Task<int> Count() => _repo.Count();
@@ -32,19 +39,25 @@ namespace HRManagement.API.Services
         {
             var job = await _jobRepo.GetById(jobId) ?? throw new NotFoundException($"Job '{jobId}' not found.");
             var list = await _repo.GetByJob(jobId);
-            return list.Select(ToDto).ToList();
+            return _mapper.Map<List<JobHistoryDTO>>(list);
         }
 
         public async Task<List<JobHistoryDTO>> GetByEmployee(decimal empId)
         {
             var list = await _repo.GetByEmployee(empId);
-            return list.Select(ToDto).ToList();
+            return _mapper.Map<List<JobHistoryDTO>>(list);
         }
 
         public async Task<List<JobHistoryDTO>> GetByDepartment(decimal deptId)
         {
             var list = await _repo.GetByDepartment(deptId);
-            return list.Select(ToDto).ToList();
+            return _mapper.Map<List<JobHistoryDTO>>(list);
+        }
+
+        public async Task<List<JobHistoryDTO>> GetDropdown()
+        {
+            var list = await _repo.GetAll();
+            return _mapper.Map<List<JobHistoryDTO>>(list);
         }
 
         public async Task<JobHistoryDTO> Create(JobHistoryDTO dto)
@@ -59,25 +72,9 @@ namespace HRManagement.API.Services
             if (await _repo.GetByKey(dto.EmployeeId, dto.StartDate) != null)
                 throw new BadRequestException("This job history record already exists.");
 
-            var entity = new JobHistory
-            {
-                EmployeeId = dto.EmployeeId,
-                StartDate = dto.StartDate,
-                EndDate = dto.EndDate,
-                JobId = dto.JobId,
-                DepartmentId = dto.DepartmentId
-            };
+            var entity = _mapper.Map<JobHistory>(dto);
             await _repo.Add(entity);
-            return ToDto(entity);
+            return _mapper.Map<JobHistoryDTO>(entity);
         }
-
-        private static JobHistoryDTO ToDto(JobHistory h) => new()
-        {
-            EmployeeId = h.EmployeeId,
-            StartDate = h.StartDate,
-            EndDate = h.EndDate,
-            JobId = h.JobId,
-            DepartmentId = h.DepartmentId
-        };
     }
 }
