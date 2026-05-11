@@ -8,9 +8,9 @@ namespace HRManagement.API.Services
 
         Task<LocationDto> GetByIdAsync(decimal id);
 
-        Task CreateAsync(CreateLocationDto dto);
+        Task CreateAsync(LocationRequestDto dto);
 
-        Task UpdateAsync(decimal id, UpdateLocationDto dto);
+        Task UpdateAsync(decimal id, LocationRequestDto dto);
 
         Task<List<LocationDto>> SearchAsync(string? city, string? state);
 

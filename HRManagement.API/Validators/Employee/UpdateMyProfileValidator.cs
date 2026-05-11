@@ -3,8 +3,7 @@ using HRManagement.API.DTOs.Employee;
 
 namespace HRManagement.API.Validators.Employee
 {
-    public class UpdateMyProfileValidator
-        : AbstractValidator<UpdateMyProfileDto>
+    public class UpdateMyProfileValidator : AbstractValidator<UpdateMyProfileDto>
     {
         public UpdateMyProfileValidator()
         {

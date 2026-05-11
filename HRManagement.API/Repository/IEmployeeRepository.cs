@@ -6,23 +6,19 @@ namespace HRManagement.API.Repository
     {
         Task<List<Employee>> GetAllAsync();
 
-        Task<Employee?> GetByIdAsync(int id);
+        Task<Employee?> GetByIdAsync(decimal id);
 
         Task<Employee?> GetByEmailAsync(string email);
 
         Task<List<Employee>> GetManagersAsync();
 
-        Task<List<Employee>> GetSubordinatesAsync(
-            int managerId);
+        Task<List<Employee>> GetSubordinatesAsync(decimal managerId);
 
-        Task<List<Employee>> SearchEmployeesAsync(
-            string name);
+        Task<List<Employee>> SearchEmployeesAsync(string name);
 
-        Task<List<Employee>>
-            GetEmployeesByDepartmentAsync(
-                short departmentId);
+        Task<List<Employee>> GetEmployeesByDepartmentAsync(short departmentId);
 
-        Task<bool> EmployeeExistsAsync(int id);
+        Task<bool> EmployeeExistsAsync(decimal id);
 
         Task<bool> EmailExistsAsync(string email);
 
@@ -30,7 +26,9 @@ namespace HRManagement.API.Repository
 
         void Update(Employee employee);
 
-Task SaveChangesAsync();
+        Task<decimal> GetMaxEmployeeIdAsync();
+
+        Task SaveChangesAsync();
     }
 
 }

@@ -2,8 +2,10 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using HRManagement.API.Common;
 using HRManagement.API.Data;
+using HRManagement.API.DTOs.Departments;
 using HRManagement.API.Filters;
 using HRManagement.API.Interfaces;
+using HRManagement.API.Mappings;
 using HRManagement.API.Middleware;
 using HRManagement.API.Repositories;
 using HRManagement.API.Repository;
@@ -62,7 +64,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddDbContext<HRContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("HRConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<IJobHistoryRepository, JobHistoryRepository>();
@@ -82,11 +84,15 @@ builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<JwtService>();
 
+builder.Services.AddAutoMapper(typeof(JobProfile).Assembly);
+
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<JobDtoValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateRegionDtoValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<CreateLocationValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<LocationRequestValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateEmployeeValidator>();
+builder.Services.AddScoped<IValidator<CreateDepartmentDto>, CreateDepartmentFluentValidator>();
+builder.Services.AddScoped<IValidator<UpdateDepartmentDto>, UpdateDepartmentFluentValidator>();
 
 builder.Services.AddScoped<DepartmentValidator>();
 builder.Services.AddScoped<ValidationFilter>();
