@@ -1,7 +1,7 @@
 ﻿using HRManagement.API.Common;
 using HRManagement.API.DTOs;
 using HRManagement.API.Filters;
-using HRManagement.API.Services.Interfaces;
+using HRManagement.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
