@@ -1,3 +1,4 @@
+﻿
 ﻿// HRManagement.API/Filters/LogActionFilter.cs
 
 using Microsoft.AspNetCore.Mvc.Filters;

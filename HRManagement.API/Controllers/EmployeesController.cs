@@ -19,6 +19,7 @@ namespace HRManagement.API.Controllers
             _employeeService = employeeService;
         }
 
+        [Authorize(Roles = "Admin")]
 [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetAllEmployees()
@@ -32,6 +33,7 @@ namespace HRManagement.API.Controllers
                     employees));
         }
 
+        [HttpGet("{id}")]
 [HttpGet("{id}")]
         public async Task<IActionResult> GetEmployeeById(int id)
         {
@@ -50,6 +52,7 @@ namespace HRManagement.API.Controllers
                     employee));
         }
 
+        [Authorize(Roles = "Admin")]
 [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateEmployee(CreateEmployeeDto dto)
@@ -63,6 +66,7 @@ namespace HRManagement.API.Controllers
                     employee));
         }
 
+        [Authorize(Roles = "Admin")]
 [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateEmployee( int id,UpdateEmployeeDto dto)
@@ -76,6 +80,7 @@ namespace HRManagement.API.Controllers
                     null));
         }
 
+        [Authorize(Roles = "Admin")]
 [Authorize(Roles = "Admin")]
         [HttpPut("{id}/role")]
         public async Task<IActionResult> UpdateRole(int id,UpdateRoleDto dto)
@@ -89,6 +94,7 @@ namespace HRManagement.API.Controllers
                     null));
         }
 
+        [HttpGet("me")]
 [HttpGet("me")]
         public async Task<IActionResult> GetMyProfile()
         {
@@ -106,6 +112,7 @@ namespace HRManagement.API.Controllers
                     employee));
         }
 
+        [HttpPut("me")]
 [HttpPut("me")]
         public async Task<IActionResult> UpdateMyProfile( UpdateMyProfileDto dto)
         {
@@ -121,6 +128,7 @@ namespace HRManagement.API.Controllers
                     null));
         }
 
+        [HttpGet("my-manager")]
 [HttpGet("my-manager")]
         public async Task<IActionResult> GetMyManager()
         {
@@ -136,6 +144,7 @@ namespace HRManagement.API.Controllers
                     manager));
         }
 
+        [HttpGet("my-subordinates")]
 [HttpGet("my-subordinates")]
         public async Task<IActionResult> GetMySubordinates()
         {
@@ -154,6 +163,7 @@ namespace HRManagement.API.Controllers
                     employees));
         }
 
+        [Authorize(Roles = "Admin")]
 [Authorize(Roles = "Admin")]
         [HttpGet("managers")]
         public async Task<IActionResult> GetManagers()
@@ -167,6 +177,7 @@ namespace HRManagement.API.Controllers
                     managers));
         }
 
+        [Authorize(Roles = "Admin")]
 [Authorize(Roles = "Admin")]
         [HttpGet("search")]
         public async Task<IActionResult> SearchEmployees([FromQuery] string name)
@@ -180,6 +191,7 @@ namespace HRManagement.API.Controllers
                     employees));
         }
 
+        [Authorize(Roles = "Admin")]
 [Authorize(Roles = "Admin")]
         [HttpGet("by-department/{departmentId}")]
         public async Task<IActionResult> GetEmployeesByDepartment(short departmentId)

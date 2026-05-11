@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace HRManagement.API.DTOs.Location
+﻿namespace HRManagement.API.DTOs.Location
 {
     public class CreateLocationDto
     {
@@ -15,3 +13,4 @@ namespace HRManagement.API.DTOs.Location
         public string? CountryId { get; set; }
     }
 }
+

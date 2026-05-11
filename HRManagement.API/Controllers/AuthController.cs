@@ -23,6 +23,7 @@ namespace HRManagement.API.Controllers
             _jwtService = jwtService;
         }
 
+        [HttpPost("register")]
 [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto dto)
         {
@@ -46,6 +47,8 @@ namespace HRManagement.API.Controllers
                     message = "Account already activated"
                 });
             }
+            employee.Password =
+                BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
             employee.Password =
                 BCrypt.Net.BCrypt.HashPassword(dto.Password);
@@ -60,6 +63,7 @@ namespace HRManagement.API.Controllers
             });
         }
 
+        [HttpPost("login")]
 [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
@@ -107,6 +111,7 @@ namespace HRManagement.API.Controllers
             });
         }
 
+        [Authorize]
 [Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> Me()
@@ -156,3 +161,4 @@ namespace HRManagement.API.Controllers
         }
     }
 }
+

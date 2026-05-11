@@ -1,3 +1,4 @@
+﻿using FluentValidation;
 using Xunit;
 using FluentValidation;
 using FluentValidation.Results;
@@ -7,6 +8,7 @@ using HRManagement.API.Models;
 using HRManagement.API.Repository;
 using HRManagement.API.Services;
 using Moq;
+using Xunit;
 
 namespace HR.Test
 {
@@ -31,6 +33,7 @@ namespace HR.Test
             _service = new JobService(_repo.Object, _jobValidator.Object, _salaryValidator.Object);
         }
 
+        [Fact]
 [Fact]
         public async Task GetAll_returns_all_jobs()
         {
@@ -82,6 +85,7 @@ namespace HR.Test
             _repo.Verify(r => r.Add(It.IsAny<Job>()), Times.Once);
         }
 
+        [Fact]
 [Fact]
         public async Task GetById_throws_NotFound_when_missing()
         {
@@ -126,3 +130,4 @@ namespace HR.Test
         }
     }
 }
+
