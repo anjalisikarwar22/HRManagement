@@ -1,15 +1,9 @@
-﻿using FluentValidation;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using HRManagement.API.Common;
 using HRManagement.API.Data;
-<<<<<<< HEAD
-using HRManagement.API.DTOs;
-=======
->>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
-using HRManagement.API.DTOs.Departments;
 using HRManagement.API.Filters;
 using HRManagement.API.Interfaces;
-using HRManagement.API.Mappings;
 using HRManagement.API.Middleware;
 using HRManagement.API.Repositories;
 using HRManagement.API.Repository;
@@ -32,96 +26,6 @@ builder.Services.AddControllers(options =>
 });
 
 builder.Services.AddEndpointsApiExplorer();
-<<<<<<< HEAD
-builder.Services.AddAutoMapper(typeof(DepartmentMappingProfile));
-
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc(
-        "v1",
-        new OpenApiInfo
-        {
-            Title = "HRManagement.API",
-            Version = "v1"
-        });
-
-    options.AddSecurityDefinition(
-        "Bearer",
-        new OpenApiSecurityScheme
-        {
-            Name = "Authorization",
-            Type = SecuritySchemeType.Http,
-            Scheme = "bearer",
-            BearerFormat = "JWT",
-            In = ParameterLocation.Header,
-            Description = "Enter JWT Token"
-        });
-
-    options.AddSecurityRequirement(
-        new OpenApiSecurityRequirement
-        {
-            {
-                new OpenApiSecurityScheme
-                {
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
-                    }
-                },
-                Array.Empty<string>()
-            }
-        });
-});
-
-builder.Services.AddDbContext<HRContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("HR")
-        ?? builder.Configuration.GetConnectionString("DefaultConnection")));
-
-builder.Services.AddScoped<IRegionRepository, RegionRepository>();
-builder.Services.AddScoped<ICountryRepository, CountryRepository>();
-builder.Services.AddScoped<ILocationRepository, LocationRepository>();
-builder.Services.AddScoped<IJobRepository, JobRepository>();
-builder.Services.AddScoped<IJobHistoryRepository, JobHistoryRepository>();
-builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-
-builder.Services.AddScoped<IRegionService, RegionService>();
-builder.Services.AddScoped<ICountryService, CountryService>();
-builder.Services.AddScoped<ILocationService, LocationService>();
-builder.Services.AddScoped<IJobService, JobService>();
-builder.Services.AddScoped<IJobHistoryService, JobHistoryService>();
-builder.Services.AddScoped<IDepartmentService, DepartmentService>();
-builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<JwtService>();
-
-builder.Services.AddScoped<DepartmentValidator>();
-builder.Services.AddScoped<DepartmentHeaderFilter>();
-builder.Services.AddScoped<LogActionFilter>();
-builder.Services.AddScoped<ValidationFilter>();
-
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidatorsFromAssemblyContaining<JobDtoValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<CreateLocationValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<CreateEmployeeValidator>();
-builder.Services.AddScoped<IValidator<CreateDepartmentDto>, CreateDepartmentFluentValidator>();
-builder.Services.AddScoped<IValidator<UpdateDepartmentDto>, UpdateDepartmentFluentValidator>();
-
-builder.Services.Configure<ApiBehaviorOptions>(options =>
-{
-    options.InvalidModelStateResponseFactory = context =>
-    {
-        var errors = context.ModelState
-            .Where(x => x.Value!.Errors.Count > 0)
-            .Select(x => new
-            {
-                Field = x.Key,
-                Errors = x.Value!.Errors.Select(e => e.ErrorMessage)
-            });
-
-=======
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -158,7 +62,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddDbContext<HRContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("HRConnection")));
 
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<IJobHistoryRepository, JobHistoryRepository>();
@@ -180,15 +84,11 @@ builder.Services.AddScoped<JwtService>();
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<JobDtoValidator>();
-
-builder.Services.AddAutoMapper(typeof(HRManagement.API.Mappings.JobProfile).Assembly);
-
 builder.Services.AddValidatorsFromAssemblyContaining<CreateRegionDtoValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateLocationValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateEmployeeValidator>();
 
 builder.Services.AddScoped<DepartmentValidator>();
-
 builder.Services.AddScoped<ValidationFilter>();
 builder.Services.AddScoped<LogActionFilter>();
 builder.Services.AddScoped<DepartmentHeaderFilter>();
@@ -205,18 +105,12 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
                 Errors = x.Value!.Errors.Select(e => e.ErrorMessage)
             });
 
->>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
         return new BadRequestObjectResult(
             new ApiResponse<object>(false, "Validation Failed", errors));
     };
 });
 
-<<<<<<< HEAD
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-=======
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
->>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -247,11 +141,3 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
-<<<<<<< HEAD
-
-public partial class Program
-{
-}
-
-=======
->>>>>>> 414c489704f573054bb98c6e424753a252d8dd96

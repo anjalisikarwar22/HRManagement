@@ -10,5 +10,8 @@ namespace HRManagement.API.Repository
         void Add(Country country);
         void Update(Country country);
         void SaveChanges();
+
+        bool ExistsById(string id);
+        bool RegionExists(decimal regionId);
     }
 }

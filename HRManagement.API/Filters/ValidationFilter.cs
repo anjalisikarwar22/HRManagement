@@ -1,5 +1,3 @@
-﻿
-﻿// HRManagement.API/Filters/ValidationFilter.cs
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
