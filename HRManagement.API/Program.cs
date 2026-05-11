@@ -14,22 +14,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<HRContext>(options =>
     options.UseSqlServer(
-        builder.Configuration
-            .GetConnectionString("HRConnection")));
+        builder.Configuration.GetConnectionString("HRConnection")));
 
-builder.Services.AddScoped<IRegionRepository,
-    RegionRepository>();
-builder.Services.AddScoped<ICountryRepository,
-    CountryRepository>();
+builder.Services.AddScoped<IRegionRepository, RegionRepository>();
+builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 
-builder.Services.AddScoped<IRegionService,
-    RegionService>();
-builder.Services.AddScoped<ICountryService,
-    CountryService>();
+builder.Services.AddScoped<IRegionService, RegionService>();
+builder.Services.AddScoped<ICountryService, CountryService>();
 
 builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidatorsFromAssemblyContaining
-    <CreateRegionDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateRegionDtoValidator>();
 
 builder.Services.AddScoped<ValidationFilter>();
 builder.Services.AddScoped<LogActionFilter>();
@@ -44,37 +38,8 @@ app.UseMiddleware<ExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
-<<<<<<< Updated upstream
     app.UseSwagger();
     app.UseSwaggerUI();
-=======
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
-
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-           
-
-            var app = builder.Build();
-
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            app.UseHttpsRedirection();
-            app.UseAuthorization();
-            app.MapControllers();
-            app.Run();
-        }
-    }
->>>>>>> Stashed changes
 }
 
 app.UseHttpsRedirection();

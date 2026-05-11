@@ -122,7 +122,7 @@ public partial class HRContext : DbContext
             entity.Property(e => e.Password)
                 .HasMaxLength(255)
                 .IsUnicode(false)
-                .HasColumnName("password");
+                .HasColumnName("password_hash");
             entity.Property(e => e.PhoneNumber)
                 .HasMaxLength(20)
                 .IsUnicode(false)
