@@ -23,11 +23,7 @@ namespace HRManagement.API.Services
             _context =context;
         }
 
-        // =====================================
-        // REGISTER
-        // =====================================
-
-        public async Task<string>
+public async Task<string>
             RegisterAsync(RegisterDto dto)
         {
             var employee =await _context.Employees
@@ -54,11 +50,7 @@ namespace HRManagement.API.Services
             return  "Account activated successfully";
         }
 
-        // =====================================
-        // LOGIN
-        // =====================================
-
-        public async Task<object> LoginAsync(LoginDto dto)
+public async Task<object> LoginAsync(LoginDto dto)
         {
             var employee = await _employeeRepository.GetByEmailAsync(dto.Email);
 
@@ -93,11 +85,7 @@ namespace HRManagement.API.Services
             };
         }
 
-        // =====================================
-        // CURRENT USER
-        // =====================================
-
-        public async Task<object>
+public async Task<object>
             GetCurrentUserAsync(decimal employeeId)
         {
             var employee =await _context.Employees

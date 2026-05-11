@@ -15,11 +15,7 @@ namespace HRManagement.API.Repository
             _context = context;
         }
 
-        // =========================================
-        // GET ALL EMPLOYEES
-        // =========================================
-
-        public async Task<List<Employee>>
+public async Task<List<Employee>>
             GetAllAsync()
         {
             return await _context.Employees
@@ -29,11 +25,7 @@ namespace HRManagement.API.Repository
                 .ToListAsync();
         }
 
-        // =========================================
-        // GET EMPLOYEE BY ID
-        // =========================================
-
-        public async Task<Employee?>
+public async Task<Employee?>
             GetByIdAsync(int id)
         {
             return await _context.Employees
@@ -44,11 +36,7 @@ namespace HRManagement.API.Repository
                     e.EmployeeId == id);
         }
 
-        // =========================================
-        // GET EMPLOYEE BY EMAIL
-        // =========================================
-
-        public async Task<Employee?>
+public async Task<Employee?>
             GetByEmailAsync(string email)
         {
             return await _context.Employees
@@ -56,11 +44,7 @@ namespace HRManagement.API.Repository
                     e.Email == email);
         }
 
-        // =========================================
-        // GET MANAGERS
-        // =========================================
-
-        public async Task<List<Employee>>
+public async Task<List<Employee>>
             GetManagersAsync()
         {
             return await _context.Employees
@@ -72,11 +56,7 @@ namespace HRManagement.API.Repository
                 .ToListAsync();
         }
 
-        // =========================================
-        // GET SUBORDINATES
-        // =========================================
-
-        public async Task<List<Employee>>
+public async Task<List<Employee>>
             GetSubordinatesAsync(int managerId)
         {
             return await _context.Employees
@@ -86,11 +66,7 @@ namespace HRManagement.API.Repository
                 .ToListAsync();
         }
 
-        // =========================================
-        // SEARCH EMPLOYEES
-        // =========================================
-
-        public async Task<List<Employee>>
+public async Task<List<Employee>>
             SearchEmployeesAsync(string name)
         {
             return await _context.Employees
@@ -104,11 +80,7 @@ namespace HRManagement.API.Repository
                 .ToListAsync();
         }
 
-        // =========================================
-        // EMPLOYEES BY DEPARTMENT
-        // =========================================
-
-        public async Task<List<Employee>>
+public async Task<List<Employee>>
             GetEmployeesByDepartmentAsync(
                 short departmentId)
         {
@@ -120,11 +92,7 @@ namespace HRManagement.API.Repository
                 .ToListAsync();
         }
 
-        // =========================================
-        // EMPLOYEE EXISTS
-        // =========================================
-
-        public async Task<bool>
+public async Task<bool>
             EmployeeExistsAsync(int id)
         {
             return await _context.Employees
@@ -132,11 +100,7 @@ namespace HRManagement.API.Repository
                     e.EmployeeId == id);
         }
 
-        // =========================================
-        // EMAIL EXISTS
-        // =========================================
-
-        public async Task<bool>
+public async Task<bool>
             EmailExistsAsync(string email)
         {
             return await _context.Employees
@@ -144,31 +108,19 @@ namespace HRManagement.API.Repository
                     e.Email == email);
         }
 
-        // =========================================
-        // ADD EMPLOYEE
-        // =========================================
-
-        public async Task AddAsync(
+public async Task AddAsync(
             Employee employee)
         {
             await _context.Employees
                 .AddAsync(employee);
         }
 
-        // =========================================
-        // UPDATE EMPLOYEE
-        // =========================================
-
-        public void Update(Employee employee)
+public void Update(Employee employee)
         {
             _context.Employees.Update(employee);
         }
 
-        // =========================================
-        // SAVE CHANGES
-        // =========================================
-
-        public async Task SaveChangesAsync()
+public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
         }

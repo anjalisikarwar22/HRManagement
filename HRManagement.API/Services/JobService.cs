@@ -94,8 +94,7 @@ namespace HRManagement.API.Services
             return ToDto(job);
         }
 
-        
-        private static async Task Validate<T>(T dto, IValidator<T> validator)
+private static async Task Validate<T>(T dto, IValidator<T> validator)
         {
             var result = await validator.ValidateAsync(dto);
             if (!result.IsValid)

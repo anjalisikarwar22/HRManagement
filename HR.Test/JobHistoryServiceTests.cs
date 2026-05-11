@@ -1,3 +1,4 @@
+using Xunit;
 using FluentValidation;
 using FluentValidation.Results;
 using HRManagement.API.DTOs;
@@ -37,9 +38,7 @@ namespace HR.Test
             DepartmentId = 60
         };
 
-        // ----- POSITIVE -----
-
-        [Fact]
+[Fact]
         public async Task GetAll_returns_all_records()
         {
             var list = new List<JobHistory> { SampleHistory(), SampleHistory() };
@@ -99,9 +98,7 @@ namespace HR.Test
             _repo.Verify(r => r.Add(It.IsAny<JobHistory>()), Times.Once);
         }
 
-        // ----- NEGATIVE -----
-
-        [Fact]
+[Fact]
         public async Task GetByJob_throws_NotFound_when_job_missing()
         {
             _jobRepo.Setup(r => r.GetById("NOPE")).ReturnsAsync((Job?)null);

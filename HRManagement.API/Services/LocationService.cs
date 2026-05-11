@@ -14,8 +14,7 @@ namespace HRManagement.API.Services
             _repository = repository;
         }
 
-
-        public async Task<List<LocationDto>> GetAllAsync()
+public async Task<List<LocationDto>> GetAllAsync()
         {
             var locations = await _repository.GetAllAsync();
 
@@ -32,16 +31,13 @@ namespace HRManagement.API.Services
             return MapToDto(location);
         }
 
-
-
-        public async Task CreateAsync(CreateLocationDto dto)
+public async Task CreateAsync(CreateLocationDto dto)
         {
             var maxLocationId = await _repository.GetMaxLocationIdAsync();
 
             var nextLocationId = (maxLocationId ?? 0) + 100;
 
-
-            var location = new Location
+var location = new Location
             {
                 LocationId = nextLocationId,
                 City = dto.City,
@@ -56,8 +52,7 @@ namespace HRManagement.API.Services
             await _repository.SaveChangesAsync();
         }
 
-
-        public async Task UpdateAsync(decimal id, UpdateLocationDto dto)
+public async Task UpdateAsync(decimal id, UpdateLocationDto dto)
         {
             var location = await _repository.GetByIdAsync(id);
 
@@ -84,9 +79,7 @@ namespace HRManagement.API.Services
             return locations.Select(MapToDto).ToList();
         }
 
-
-
-        public async Task<List<DropdownDto>> GetDropdownAsync()
+public async Task<List<DropdownDto>> GetDropdownAsync()
         {
             var locations = await _repository.GetAllAsync();
 
@@ -124,9 +117,7 @@ namespace HRManagement.API.Services
             return await _repository.GetDistinctStatesAsync();
         }
 
-
-
-        private static LocationDto MapToDto(Location x)
+private static LocationDto MapToDto(Location x)
         {
             return new LocationDto
             {

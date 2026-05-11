@@ -23,11 +23,7 @@ namespace HRManagement.API.Controllers
             _jwtService = jwtService;
         }
 
-        // =========================
-        // REGISTER
-        // =========================
-
-        [HttpPost("register")]
+[HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto dto)
         {
             var employee = await _context.Employees
@@ -43,7 +39,6 @@ namespace HRManagement.API.Controllers
                 });
             }
 
-            // already activated
             if (employee.Password != null)
             {
                 return BadRequest(new
@@ -52,11 +47,9 @@ namespace HRManagement.API.Controllers
                 });
             }
 
-            // hash password
             employee.Password =
                 BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
-            // default role
             employee.Role = "Employee";
 
             await _context.SaveChangesAsync();
@@ -67,11 +60,7 @@ namespace HRManagement.API.Controllers
             });
         }
 
-        // =========================
-        // LOGIN
-        // =========================
-
-        [HttpPost("login")]
+[HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
             var employee = await _context.Employees
@@ -86,7 +75,6 @@ namespace HRManagement.API.Controllers
                 });
             }
 
-            // account not activated
             if (employee.Password == null)
             {
                 return Unauthorized(new
@@ -119,11 +107,7 @@ namespace HRManagement.API.Controllers
             });
         }
 
-        // =========================
-        // CURRENT USER
-        // =========================
-
-        [Authorize]
+[Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> Me()
         {

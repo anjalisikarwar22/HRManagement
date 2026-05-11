@@ -9,5 +9,7 @@ namespace HRManagement.API.Repository
         void Add(Region region);
         void Update(Region region);
         void SaveChanges();
+        bool ExistsByName(string name);
+        bool ExistsById(decimal id);
     }
 }
