@@ -30,6 +30,17 @@ namespace HRManagement.API.Controllers
         }
         [HttpGet("count")]
 
+        [HttpGet("dropdown")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Dropdown()
+        {
+            var data = await _service.GetDropdown();
+            return Ok(new ApiResponse<object>(
+                true,
+                "Job history dropdown fetched successfully.",
+                data));
+        }
+
         [HttpGet("count")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Count()

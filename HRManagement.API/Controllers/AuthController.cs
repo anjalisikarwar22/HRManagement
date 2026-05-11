@@ -52,8 +52,11 @@ namespace HRManagement.API.Controllers
 
             employee.Password =
                 BCrypt.Net.BCrypt.HashPassword(dto.Password);
+            if (string.IsNullOrEmpty(employee.Role))
+            {
 
-            employee.Role = "Employee";
+                employee.Role = "Employee";
+            }
 
             await _context.SaveChangesAsync();
 
@@ -87,10 +90,15 @@ namespace HRManagement.API.Controllers
                 });
             }
 
-            bool validPassword =
-                BCrypt.Net.BCrypt.Verify(
-                    dto.Password,
-                    employee.Password);
+            bool validPassword;
+            if (employee.Password.StartsWith("$2"))
+            {
+                validPassword = BCrypt.Net.BCrypt.Verify(dto.Password, employee.Password);
+            }
+            else
+            {
+                validPassword = employee.Password == dto.Password;
+            }
 
             if (!validPassword)
             {

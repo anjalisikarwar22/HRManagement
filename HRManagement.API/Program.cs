@@ -180,6 +180,9 @@ builder.Services.AddScoped<JwtService>();
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<JobDtoValidator>();
+
+builder.Services.AddAutoMapper(typeof(HRManagement.API.Mappings.JobProfile).Assembly);
+
 builder.Services.AddValidatorsFromAssemblyContaining<CreateRegionDtoValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateLocationValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateEmployeeValidator>();

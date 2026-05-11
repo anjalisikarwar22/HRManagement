@@ -10,5 +10,6 @@ namespace HRManagement.API.Services
         Task<List<JobHistoryDTO>> GetByEmployee(decimal empId);
         Task<List<JobHistoryDTO>> GetByDepartment(decimal deptId);
         Task<JobHistoryDTO> Create(JobHistoryDTO dto);
+        Task<List<JobHistoryDTO>> GetDropdown();
     }
 }

@@ -30,7 +30,7 @@ namespace HRManagement.API.Controllers
         }
 
         [HttpGet("{id}")]
-[HttpGet("{id}")]
+
         public async Task<IActionResult> GetById(decimal id)
         {
             var data = await _service.GetByIdAsync(id);
