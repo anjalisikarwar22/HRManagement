@@ -24,7 +24,6 @@ namespace HRManagement.API.Controllers
         }
 
         [HttpPost("register")]
-[HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto dto)
         {
             var employee = await _context.Employees
@@ -67,7 +66,6 @@ namespace HRManagement.API.Controllers
         }
 
         [HttpPost("login")]
-[HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
             var employee = await _context.Employees
@@ -120,7 +118,6 @@ namespace HRManagement.API.Controllers
         }
 
         [Authorize]
-[Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> Me()
         {
