@@ -1,3 +1,4 @@
+﻿using AutoMapper;
 using HRManagement.API.DTOs.Departments;
 using HRManagement.API.Interfaces;
 using HRManagement.API.Models;
@@ -9,19 +10,22 @@ namespace HRManagement.API.Services
     {
         private readonly IDepartmentRepository _departmentRepository;
         private readonly DepartmentValidator _validator;
+        private readonly IMapper _mapper;
 
         public DepartmentService(
             IDepartmentRepository departmentRepository,
-            DepartmentValidator validator)
+            DepartmentValidator validator,
+            IMapper mapper)
         {
             _departmentRepository = departmentRepository;
             _validator = validator;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<DepartmentListDto>> GetAllAsync()
         {
             var departments = await _departmentRepository.GetAllAsync();
-            return departments.Select(ToListDto);
+            return _mapper.Map<IEnumerable<DepartmentListDto>>(departments);
         }
 
         public async Task<DepartmentDto?> GetByIdAsync(decimal departmentId)
@@ -29,7 +33,7 @@ namespace HRManagement.API.Services
             _validator.ValidateDepartmentId(departmentId);
 
             var department = await _departmentRepository.GetByIdAsync(departmentId);
-            return department == null ? null : ToDto(department);
+            return department == null ? null : _mapper.Map<DepartmentDto>(department);
         }
 
         public async Task<IEnumerable<DepartmentListDto>> GetByLocationAsync(decimal locationId)
@@ -37,7 +41,7 @@ namespace HRManagement.API.Services
             _validator.ValidateLocationId(locationId);
 
             var departments = await _departmentRepository.GetByLocationAsync(locationId);
-            return departments.Select(ToListDto);
+            return _mapper.Map<IEnumerable<DepartmentListDto>>(departments);
         }
 
         public async Task<IEnumerable<DepartmentListDto>> GetByManagerAsync(decimal managerId)
@@ -45,7 +49,7 @@ namespace HRManagement.API.Services
             _validator.ValidateManagerId(managerId);
 
             var departments = await _departmentRepository.GetByManagerAsync(managerId);
-            return departments.Select(ToListDto);
+            return _mapper.Map<IEnumerable<DepartmentListDto>>(departments);
         }
 
         public async Task<IEnumerable<DepartmentListDto>> SearchByNameAsync(string name)
@@ -53,7 +57,7 @@ namespace HRManagement.API.Services
             _validator.ValidateSearch(name);
 
             var departments = await _departmentRepository.SearchByNameAsync(name);
-            return departments.Select(ToListDto);
+            return _mapper.Map<IEnumerable<DepartmentListDto>>(departments);
         }
 
         public async Task<PagedDepartmentDto> GetPagedAsync(int pageNumber, int pageSize)
@@ -65,7 +69,7 @@ namespace HRManagement.API.Services
 
             return new PagedDepartmentDto
             {
-                Items = departments.Select(ToListDto),
+                Items = _mapper.Map<IEnumerable<DepartmentListDto>>(departments),
                 TotalCount = totalCount,
                 PageNumber = pageNumber,
                 PageSize = pageSize
@@ -85,22 +89,16 @@ namespace HRManagement.API.Services
         public async Task<IEnumerable<DepartmentDropdownDto>> GetDropdownAsync()
         {
             var departments = await _departmentRepository.GetDropdownAsync();
-            return departments.Select(ToDropdownDto);
+            return _mapper.Map<IEnumerable<DepartmentDropdownDto>>(departments);
         }
 
         public async Task<DepartmentDto> CreateAsync(CreateDepartmentDto dto)
         {
             _validator.ValidateCreate(dto);
 
-            var department = new Department
-            {
-                DepartmentName = dto.DepartmentName.Trim(),
-                ManagerId = dto.ManagerId,
-                LocationId = dto.LocationId
-            };
-
+            var department = _mapper.Map<Department>(dto);
             var created = await _departmentRepository.CreateAsync(department);
-            return ToDto(created);
+            return _mapper.Map<DepartmentDto>(created);
         }
 
         public async Task<DepartmentDto?> UpdateAsync(
@@ -114,43 +112,9 @@ namespace HRManagement.API.Services
             if (department == null)
                 return null;
 
-            department.DepartmentName = dto.DepartmentName.Trim();
-            department.ManagerId = dto.ManagerId;
-            department.LocationId = dto.LocationId;
-
+            _mapper.Map(dto, department);
             await _departmentRepository.UpdateAsync(department);
-            return ToDto(department);
-        }
-
-        private static DepartmentDto ToDto(Department department)
-        {
-            return new DepartmentDto
-            {
-                DepartmentId = department.DepartmentId,
-                DepartmentName = department.DepartmentName,
-                ManagerId = department.ManagerId,
-                LocationId = department.LocationId
-            };
-        }
-
-        private static DepartmentListDto ToListDto(Department department)
-        {
-            return new DepartmentListDto
-            {
-                DepartmentId = department.DepartmentId,
-                DepartmentName = department.DepartmentName,
-                ManagerId = department.ManagerId,
-                LocationId = department.LocationId
-            };
-        }
-
-        private static DepartmentDropdownDto ToDropdownDto(Department department)
-        {
-            return new DepartmentDropdownDto
-            {
-                DepartmentId = department.DepartmentId,
-                DepartmentName = department.DepartmentName
-            };
+            return _mapper.Map<DepartmentDto>(department);
         }
     }
 }

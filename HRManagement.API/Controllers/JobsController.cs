@@ -1,4 +1,4 @@
-using HRManagement.API.Common;
+﻿using HRManagement.API.Common;
 using HRManagement.API.DTOs;
 using HRManagement.API.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -14,6 +14,7 @@ namespace HRManagement.API.Controllers
         private readonly IJobService _service;
 
         public JobsController(IJobService service) => _service = service;
+        [HttpGet]
 
         [HttpGet]
         [Authorize(Roles = "Admin,Employee")]
@@ -27,6 +28,7 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
+        [HttpGet("count")]
 
         [HttpGet("dropdown")]
         [Authorize(Roles = "Admin,Employee")]
@@ -51,6 +53,7 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
+        [HttpGet("search")]
 
         [HttpGet("search")]
         [Authorize(Roles = "Admin,Employee")]
@@ -64,6 +67,7 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
+        [HttpGet("by-salary-range")]
 
         [HttpGet("by-salary-range")]
         [Authorize(Roles = "Admin,Employee")]
@@ -79,6 +83,7 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
+        [HttpGet("{id:length(1,10)}")]
 
         [HttpGet("{id:length(1,10)}")]
         [Authorize(Roles = "Admin,Employee")]
@@ -92,6 +97,7 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
+        [HttpGet("{id:length(1,10)}/employees")]
 
         [HttpGet("{id:length(1,10)}/employees")]
         [Authorize(Roles = "Admin")]
@@ -105,6 +111,7 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
+        [HttpPost]
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
@@ -118,6 +125,7 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
+        [HttpPut("{id:length(1,10)}")]
 
         [HttpPut("{id:length(1,10)}")]
         [Authorize(Roles = "Admin")]
@@ -131,6 +139,7 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
+        [HttpPatch("{id:length(1,10)}/salary-range")]
 
         [HttpPatch("{id:length(1,10)}/salary-range")]
         [Authorize(Roles = "Admin")]
@@ -146,3 +155,4 @@ namespace HRManagement.API.Controllers
         }
     }
 }
+

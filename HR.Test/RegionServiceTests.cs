@@ -1,29 +1,24 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using System.Collections.Generic;
-using System.Linq;
+﻿using HRManagement.API.DTOs;
+using HRManagement.API.Exceptions;
 using HRManagement.API.Models;
-using HRManagement.API.DTOs;
 using HRManagement.API.Repository;
 using HRManagement.API.Services;
-using HRManagement.API.Exceptions;
+using Moq;
 
 namespace HR.Test
 {
-    [TestClass]
     public class RegionServiceTests
     {
         private Mock<IRegionRepository>? _mockRepo;
         private RegionService? _service;
 
-        [TestInitialize]
-        public void Setup()
+        public RegionServiceTests()
         {
             _mockRepo = new Mock<IRegionRepository>();
             _service = new RegionService(_mockRepo.Object);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAllRegions_WhenRegionsExist_ReturnsTwoRegions()
         {
             var fakeData = new List<Region>
@@ -35,11 +30,11 @@ namespace HR.Test
 
             var result = _service!.GetAllRegions().ToList();
 
-            Assert.AreEqual(2, result.Count);
-            Assert.AreEqual("Europe", result[0].RegionName);
+            Assert.Equal(2, result.Count);
+            Assert.Equal("Europe", result[0].RegionName);
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateRegion_WithValidName_CallsAddAndSave()
         {
             var dto = new CreateRegionDto { RegionName = "South Asia" };
@@ -51,7 +46,7 @@ namespace HR.Test
             _mockRepo.Verify(r => r.SaveChanges(), Times.Once);
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateRegion_WhenDuplicate_ThrowsDuplicateException()
         {
             var dto = new CreateRegionDto { RegionName = "Europe" };
@@ -60,34 +55,16 @@ namespace HR.Test
                 new Region { RegionId = 1, RegionName = "Europe" }
             });
 
-            bool exceptionThrown = false;
-            try
-            {
-                _service!.CreateRegion(dto);
-            }
-            catch (DuplicateException)
-            {
-                exceptionThrown = true;
-            }
-            Assert.IsTrue(exceptionThrown, "DuplicateException should have been thrown");
+            Assert.Throws<DuplicateException>(() => _service!.CreateRegion(dto));
         }
 
-        [TestMethod]
+        [Fact]
         public void UpdateRegion_WhenNotFound_ThrowsNotFoundException()
         {
             var dto = new CreateRegionDto { RegionName = "New Name" };
             _mockRepo!.Setup(r => r.GetById((decimal)99)).Returns((Region?)null);
 
-            bool exceptionThrown = false;
-            try
-            {
-                _service!.UpdateRegion((decimal)99, dto);
-            }
-            catch (NotFoundException)
-            {
-                exceptionThrown = true;
-            }
-            Assert.IsTrue(exceptionThrown, "NotFoundException should have been thrown");
+            Assert.Throws<NotFoundException>(() => _service!.UpdateRegion((decimal)99, dto));
         }
     }
 }

@@ -20,14 +20,22 @@ namespace HRManagement.API.Services
             _context = context;
         }
 
+<<<<<<< HEAD
+        public async Task<IEnumerable<EmployeeResponseDto>> GetAllEmployeesAsync()
+=======
 public async Task<IEnumerable<EmployeeResponseDto>> GetAllEmployeesAsync()
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
         {
             var employees = await _employeeRepository.GetAllAsync();
 
             return employees.Select(MapEmployee);
         }
 
+<<<<<<< HEAD
+        public async Task<EmployeeResponseDto> GetEmployeeByIdAsync(int id,int currentUserId, string currentRole)
+=======
 public async Task<EmployeeResponseDto> GetEmployeeByIdAsync(int id,int currentUserId, string currentRole)
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
         {
             if (currentRole != "Admin" && currentUserId != id)
             {
@@ -44,7 +52,11 @@ public async Task<EmployeeResponseDto> GetEmployeeByIdAsync(int id,int currentUs
             return MapEmployee(employee);
         }
 
+<<<<<<< HEAD
+        public async Task<EmployeeResponseDto> CreateEmployeeAsync( CreateEmployeeDto dto)
+=======
 public async Task<EmployeeResponseDto> CreateEmployeeAsync( CreateEmployeeDto dto)
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
         {
             var job = await _context.Jobs.FindAsync(dto.JobId);
 
@@ -109,7 +121,11 @@ public async Task<EmployeeResponseDto> CreateEmployeeAsync( CreateEmployeeDto dt
             return MapEmployee(employee);
         }
 
+<<<<<<< HEAD
+        public async Task<string> UpdateEmployeeAsync(int id,UpdateEmployeeDto dto)
+=======
 public async Task<string> UpdateEmployeeAsync(int id,UpdateEmployeeDto dto)
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
         {
             var employee = await _employeeRepository.GetByIdAsync(id);
 
@@ -158,11 +174,19 @@ bool departmentChanged =employee.DepartmentId !=dto.DepartmentId;
 
                 DateOnly startDate;
 
+<<<<<<< HEAD
+                if (lastHistory == null){
+                    startDate =employee.HireDate;
+                }
+
+                else
+=======
 if (lastHistory == null){
                     startDate =employee.HireDate;
                 }
 
 else
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
                 {
                     startDate =lastHistory.EndDate;
                 }
@@ -197,7 +221,11 @@ employee.Email = dto.Email;
             return "Employee updated successfully";
         }
 
+<<<<<<< HEAD
+        public async Task<string> UpdateRoleAsync( int id,UpdateRoleDto dto)
+=======
 public async Task<string> UpdateRoleAsync( int id,UpdateRoleDto dto)
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
         {
             var employee = await _employeeRepository.GetByIdAsync(id);
 
@@ -215,7 +243,11 @@ public async Task<string> UpdateRoleAsync( int id,UpdateRoleDto dto)
             return "Role updated successfully";
         }
 
+<<<<<<< HEAD
+        public async Task<EmployeeResponseDto> GetMyProfileAsync(int employeeId)
+=======
 public async Task<EmployeeResponseDto> GetMyProfileAsync(int employeeId)
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
         {
             var employee = await _employeeRepository.GetByIdAsync(employeeId);
 
@@ -227,7 +259,11 @@ public async Task<EmployeeResponseDto> GetMyProfileAsync(int employeeId)
             return MapEmployee(employee);
         }
 
+<<<<<<< HEAD
+        public async Task<string> UpdateMyProfileAsync(int employeeId,UpdateMyProfileDto dto)
+=======
 public async Task<string> UpdateMyProfileAsync(int employeeId,UpdateMyProfileDto dto)
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
         {
             var employee = await _employeeRepository.GetByIdAsync(employeeId);
 
@@ -246,7 +282,11 @@ public async Task<string> UpdateMyProfileAsync(int employeeId,UpdateMyProfileDto
             return "Profile updated successfully";
         }
 
+<<<<<<< HEAD
+        public async Task<ManagerResponseDto> GetMyManagerAsync(
+=======
 public async Task<ManagerResponseDto> GetMyManagerAsync(
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
             int employeeId)
         {
             var employee = await _employeeRepository.GetByIdAsync(employeeId);
@@ -268,7 +308,11 @@ public async Task<ManagerResponseDto> GetMyManagerAsync(
             };
         }
 
+<<<<<<< HEAD
+        public async Task<IEnumerable<SubordinateResponseDto>>
+=======
 public async Task<IEnumerable<SubordinateResponseDto>>
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
             GetMySubordinatesAsync(int employeeId)
         {
             var employees = await _employeeRepository.GetSubordinatesAsync(employeeId);
@@ -282,7 +326,11 @@ public async Task<IEnumerable<SubordinateResponseDto>>
             });
         }
 
+<<<<<<< HEAD
+        public async Task<IEnumerable<EmployeeLookupDto>> GetManagersAsync()
+=======
 public async Task<IEnumerable<EmployeeLookupDto>> GetManagersAsync()
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
         {
             var managers = await _employeeRepository.GetManagersAsync();
 
@@ -293,7 +341,11 @@ public async Task<IEnumerable<EmployeeLookupDto>> GetManagersAsync()
             });
         }
 
+<<<<<<< HEAD
+        public async Task<IEnumerable<SearchEmployeeDto>> SearchEmployeesAsync(string name)
+=======
 public async Task<IEnumerable<SearchEmployeeDto>> SearchEmployeesAsync(string name)
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
         {
             var employees =await _employeeRepository.SearchEmployeesAsync(name);
 
@@ -307,7 +359,11 @@ public async Task<IEnumerable<SearchEmployeeDto>> SearchEmployeesAsync(string na
             });
         }
 
+<<<<<<< HEAD
+        public async Task<IEnumerable<SearchEmployeeDto>> GetEmployeesByDepartmentAsync(short departmentId)
+=======
 public async Task<IEnumerable<SearchEmployeeDto>> GetEmployeesByDepartmentAsync(short departmentId)
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
         {
             var employees = await _employeeRepository.GetEmployeesByDepartmentAsync(departmentId);
 
@@ -321,7 +377,11 @@ public async Task<IEnumerable<SearchEmployeeDto>> GetEmployeesByDepartmentAsync(
             });
         }
 
+<<<<<<< HEAD
+        private EmployeeResponseDto MapEmployee(Employee employee)
+=======
 private EmployeeResponseDto MapEmployee(Employee employee)
+>>>>>>> 414c489704f573054bb98c6e424753a252d8dd96
         {
             decimal totalSalary = employee.Salary ?? 0;
 
