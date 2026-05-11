@@ -64,7 +64,15 @@ public async Task<object> LoginAsync(LoginDto dto)
                 throw new UnauthorizedException("Account not activated");
             }
 
-            bool validPassword =BCrypt.Net.BCrypt.Verify( dto.Password,employee.Password);
+            bool validPassword;
+            if (employee.Password.StartsWith("$2"))
+            {
+                validPassword = BCrypt.Net.BCrypt.Verify(dto.Password, employee.Password);
+            }
+            else
+            {
+                validPassword = employee.Password == dto.Password;
+            }
 
             if (!validPassword)
             {

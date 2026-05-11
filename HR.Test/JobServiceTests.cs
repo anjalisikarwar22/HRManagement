@@ -1,8 +1,10 @@
 using Xunit;
+using AutoMapper;
 using FluentValidation;
 using FluentValidation.Results;
 using HRManagement.API.DTOs;
 using HRManagement.API.Exceptions;
+using HRManagement.API.Mappings;
 using HRManagement.API.Models;
 using HRManagement.API.Repository;
 using HRManagement.API.Services;
@@ -28,10 +30,11 @@ namespace HR.Test
             _salaryValidator.Setup(v => v.ValidateAsync(It.IsAny<SalaryDTO>(), default))
                 .ReturnsAsync(new ValidationResult());
 
-            _service = new JobService(_repo.Object, _jobValidator.Object, _salaryValidator.Object);
+            var mapper = new MapperConfiguration(c => c.AddProfile<JobProfile>()).CreateMapper();
+            _service = new JobService(_repo.Object, mapper, _jobValidator.Object, _salaryValidator.Object);
         }
 
-[Fact]
+        [Fact]
         public async Task GetAll_returns_all_jobs()
         {
             var jobs = new List<Job>
@@ -82,7 +85,7 @@ namespace HR.Test
             _repo.Verify(r => r.Add(It.IsAny<Job>()), Times.Once);
         }
 
-[Fact]
+        [Fact]
         public async Task GetById_throws_NotFound_when_missing()
         {
             _repo.Setup(r => r.GetById("NOPE")).ReturnsAsync((Job?)null);

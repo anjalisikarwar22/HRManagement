@@ -12,7 +12,8 @@ namespace HRManagement.API.Validators
 
             RuleFor(x => x.JobId)
                 .NotEmpty().WithMessage("JobId is required.")
-                .MaximumLength(10);
+                .Matches("^[A-Z0-9_]{2,10}$")
+                .WithMessage("JobId must be 2-10 uppercase letters, digits, or underscores (e.g. IT_PROG).");
 
             RuleFor(x => x.StartDate)
                 .NotEmpty().WithMessage("StartDate is required.");

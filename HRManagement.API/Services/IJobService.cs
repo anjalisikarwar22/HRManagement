@@ -13,5 +13,6 @@ namespace HRManagement.API.Services
         Task<JobDTO> Create(JobDTO dto);
         Task<JobDTO> Update(string id, JobDTO dto);
         Task<JobDTO> UpdateSalaryRange(string id, SalaryDTO dto);
+        Task<List<JobDTO>> GetDropdown();
     }
 }
