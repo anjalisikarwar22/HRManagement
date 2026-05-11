@@ -15,11 +15,12 @@ namespace HRManagement.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Register controllers with global ValidateModelFilter
+            // Controllers + global model-validation filter
             builder.Services.AddControllers(options =>
             {
                 options.Filters.Add<ValidateModelFilter>();
             });
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -29,20 +30,22 @@ namespace HRManagement.API
                     builder.Configuration.GetConnectionString("HR")
                     ?? "Server=.\\sqlexpress;Database=HR;Trusted_Connection=True;TrustServerCertificate=True;"));
 
-            // Repositories
+            // Repositories + Services
             builder.Services.AddScoped<IJobRepository, JobRepository>();
             builder.Services.AddScoped<IJobHistoryRepository, JobHistoryRepository>();
-
-            // Services
             builder.Services.AddScoped<IJobService, JobService>();
             builder.Services.AddScoped<IJobHistoryService, JobHistoryService>();
 
-            // FluentValidation - auto register all validators
+            // FluentValidation
             builder.Services.AddValidatorsFromAssemblyContaining<JobDtoValidator>();
+
+            // TODO: Auth will be wired by AuthController teammate.
+            // When that's merged, uncomment the [Authorize] attributes in
+            // JobsController and JobHistoryController.
 
             var app = builder.Build();
 
-            // Global exception handling
+            // Global exception handler (must be early)
             app.UseMiddleware<ExceptionMiddleware>();
 
             if (app.Environment.IsDevelopment())
