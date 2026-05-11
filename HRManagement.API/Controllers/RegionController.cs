@@ -1,93 +1,192 @@
-﻿using HRManagement.API.DTOs;
+﻿using HRManagement.API.Common;
+using HRManagement.API.DTOs;
+using HRManagement.API.Filters;
 using HRManagement.API.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace HRManagement.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class RegionController : ControllerBase
+    [Route("api/[controller]")]
+    [ServiceFilter(typeof(LogActionFilter))]
+    public class RegionController(
+        IRegionService regionService,
+        ILogger<RegionController> logger)
+        : ControllerBase
     {
-       
-        private readonly IRegionService _regionService;
-
-        public RegionController(IRegionService regionService)
-        {
-            _regionService = regionService;
-        }
-
         [HttpGet]
         public IActionResult GetAllRegions()
         {
-            var regions = _regionService.GetAllRegions();
-            return Ok(regions);
+            try
+            {
+                var regions = regionService.GetAllRegions();
+
+                return Ok(new ApiResponse<IEnumerable < RegionDto >>
+                {
+                    Success = true,
+                    Message = "Regions fetched successfully",
+                    Data = regions
+                });
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex,
+                    "Error in GetAllRegions");
+
+                return StatusCode(500,
+                    new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Error fetching regions",
+                        Data = null
+                    });
+            }
         }
 
-     
-        [HttpGet("{id}")]
+        [HttpGet("{id:decimal}")]
         public IActionResult GetRegionById(decimal id)
         {
-            var region = _regionService.GetRegionById(id);
+            try
+            {
+                var region = regionService
+                    .GetRegionById(id);
 
-            if (region == null)
-                return NotFound(
-                    $"Region with id {id} not found");
+                if (region is null)
+                    return NotFound(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = $"Region with id {id}" +
+                                  $" not found",
+                        Data = null
+                    });
 
-            return Ok(region);
+                return Ok(new ApiResponse<RegionDto>
+                {
+                    Success = true,
+                    Message = "Region fetched successfully",
+                    Data = region
+                });
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex,
+                    "Error in GetRegionById {Id}", id);
+
+                return StatusCode(500,
+                    new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Error fetching region",
+                        Data = null
+                    });
+            }
         }
 
-       
-        [HttpGet("{id}/countries")]
+        [HttpGet("{id:decimal}/countries")]
         public IActionResult GetCountriesByRegion(
             decimal id,
             [FromServices] ICountryService countryService)
         {
-            var region = _regionService.GetRegionById(id);
-            if (region == null)
-                return NotFound(
-                    $"Region with id {id} not found");
-
-            var countries = countryService
-                                .GetCountriesByRegion(id);
-
-            return Ok(countries);
-        }
-
-        [HttpPost]
-        public IActionResult CreateRegion(
-            [FromBody] CreateRegionDto dto)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             try
             {
-                _regionService.CreateRegion(dto);
-                return Ok("Region created successfully");
+                var region = regionService
+                    .GetRegionById(id);
+
+                if (region is null)
+                    return NotFound(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = $"Region with id {id}" +
+                                  $" not found",
+                        Data = null
+                    });
+
+                var countries = countryService
+                    .GetCountriesByRegion(id);
+
+                return Ok(new ApiResponse<IEnumerable < CountryDto >>
+                {
+                    Success = true,
+                    Message = "Countries fetched successfully",
+                    Data = countries
+                });
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                logger.LogError(ex,
+                    "Error in GetCountriesByRegion {Id}", id);
+
+                return StatusCode(500,
+                    new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Error fetching countries",
+                        Data = null
+                    });
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPost]
+        [ServiceFilter(typeof(ValidationFilter))]
+        public IActionResult CreateRegion(
+            [FromBody] CreateRegionDto dto)
+        {
+            try
+            {
+                regionService.CreateRegion(dto);
+
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Region created successfully",
+                    Data = null
+                });
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex,
+                    "Error in CreateRegion");
+
+                return StatusCode(500,
+                    new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Error creating region",
+                        Data = null
+                    });
+            }
+        }
+
+        [HttpPut("{id:decimal}")]
+        [ServiceFilter(typeof(ValidationFilter))]
         public IActionResult UpdateRegion(
             decimal id,
             [FromBody] CreateRegionDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             try
             {
-                _regionService.UpdateRegion(id, dto);
-                return Ok("Region updated successfully");
+                regionService.UpdateRegion(id, dto);
+
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Region updated successfully",
+                    Data = null
+                });
             }
             catch (Exception ex)
             {
-                return NotFound(ex.Message);
+                logger.LogError(ex,
+                    "Error in UpdateRegion {Id}", id);
+
+                return StatusCode(500,
+                    new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Error updating region",
+                        Data = null
+                    });
             }
         }
     }

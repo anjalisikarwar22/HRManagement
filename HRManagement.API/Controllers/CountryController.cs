@@ -1,94 +1,210 @@
-﻿using HRManagement.API.DTOs;
+﻿using HRManagement.API.Common;
+using HRManagement.API.DTOs;
+using HRManagement.API.Filters;
 using HRManagement.API.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace HRManagement.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class CountryController : ControllerBase
+    [Route("api/[controller]")]
+    [ServiceFilter(typeof(LogActionFilter))]
+    public class CountryController(
+        ICountryService countryService,
+        ILogger<CountryController> logger)
+        : ControllerBase
     {
-        private readonly ICountryService _countryService;
-
-        public CountryController(ICountryService countryService)
-        {
-            _countryService = countryService;
-        }
         [HttpGet]
         public IActionResult GetAllCountries()
         {
-            var countries = _countryService.GetAllCountries();
-            return Ok(countries);
+            try
+            {
+                var countries = countryService
+                    .GetAllCountries();
+
+                return Ok(new ApiResponse<IEnumerable < CountryDto >>
+                {
+                    Success = true,
+                    Message = "Countries fetched successfully",
+                    Data = countries
+                });
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex,
+                    "Error in GetAllCountries");
+
+                return StatusCode(500,
+                    new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Error fetching countries",
+                        Data = null
+                    });
+            }
         }
 
-        
-        [HttpGet("{id}")]
+        [HttpGet("{id:alpha:minlength(2):maxlength(4)}")]
         public IActionResult GetCountryById(string id)
         {
-            var country = _countryService.GetCountryById(id);
+            try
+            {
+                var country = countryService
+                    .GetCountryById(id);
 
-            if (country == null)
-                return NotFound(
-                    $"Country with code '{id}' not found");
+                if (country is null)
+                    return NotFound(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = $"Country '{id}' not found",
+                        Data = null
+                    });
 
-            return Ok(country);
+                return Ok(new ApiResponse<CountryDto>
+                {
+                    Success = true,
+                    Message = "Country fetched successfully",
+                    Data = country
+                });
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex,
+                    "Error in GetCountryById {Id}", id);
+
+                return StatusCode(500,
+                    new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Error fetching country",
+                        Data = null
+                    });
+            }
         }
 
-      
-        [HttpGet("byregion/{regionId}")]
+        [HttpGet("byregion/{regionId:decimal:min(1)}")]
         public IActionResult GetCountriesByRegion(
             decimal regionId)
         {
-            var countries = _countryService
-                                .GetCountriesByRegion(regionId);
-            return Ok(countries);
+            try
+            {
+                var countries = countryService
+                    .GetCountriesByRegion(regionId);
+
+                return Ok(new ApiResponse<IEnumerable < CountryDto >>
+                {
+                    Success = true,
+                    Message = "Countries fetched successfully",
+                    Data = countries
+                });
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex,
+                    "Error in GetCountriesByRegion {Id}",
+                    regionId);
+
+                return StatusCode(500,
+                    new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Error fetching countries",
+                        Data = null
+                    });
+            }
         }
 
         [HttpGet("regions")]
         public IActionResult GetRegionsDropdown()
         {
-            var regions = _countryService
-                              .GetRegionsForDropdown();
-            return Ok(regions);
-        }
-
-        [HttpPost]
-        public IActionResult CreateCountry(
-            [FromBody] CreateCountryDto dto)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             try
             {
-                _countryService.CreateCountry(dto);
-                return Ok("Country created successfully");
+                var regions = countryService
+                    .GetRegionsForDropdown();
+
+                return Ok(new ApiResponse<IEnumerable < RegionDto >>
+                {
+                    Success = true,
+                    Message = "Regions fetched successfully",
+                    Data = regions
+                });
             }
             catch (Exception ex)
             {
-         
-                return BadRequest(ex.Message);
+                logger.LogError(ex,
+                    "Error in GetRegionsDropdown");
+
+                return StatusCode(500,
+                    new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Error fetching regions",
+                        Data = null
+                    });
             }
         }
 
-        
-        [HttpPut("{id}")]
+        [HttpPost]
+        [ServiceFilter(typeof(ValidationFilter))]
+        public IActionResult CreateCountry(
+            [FromBody] CreateCountryDto dto)
+        {
+            try
+            {
+                countryService.CreateCountry(dto);
+
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Country created successfully",
+                    Data = null
+                });
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex,
+                    "Error in CreateCountry");
+
+                return StatusCode(500,
+                    new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Error creating country",
+                        Data = null
+                    });
+            }
+        }
+
+        [HttpPut("{id:alpha:minlength(2):maxlength(4)}")]
+        [ServiceFilter(typeof(ValidationFilter))]
         public IActionResult UpdateCountry(
             string id,
             [FromBody] CreateCountryDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             try
             {
-                _countryService.UpdateCountry(id, dto);
-                return Ok("Country updated successfully");
+                countryService.UpdateCountry(id, dto);
+
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Country updated successfully",
+                    Data = null
+                });
             }
             catch (Exception ex)
             {
-                return NotFound(ex.Message);
+                logger.LogError(ex,
+                    "Error in UpdateCountry {Id}", id);
+
+                return StatusCode(500,
+                    new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Error updating country",
+                        Data = null
+                    });
             }
         }
     }

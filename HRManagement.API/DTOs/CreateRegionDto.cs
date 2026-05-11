@@ -2,6 +2,6 @@
 {
     public class CreateRegionDto
     {
-        public string RegionName { get; set; } 
+        public string? RegionName { get; set; } 
     }
 }

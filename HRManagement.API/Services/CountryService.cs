@@ -1,36 +1,32 @@
 ﻿using HRManagement.API.DTOs;
-using HRManagement.API.Models;  
-using HRManagement.API.Repositories.Interfaces; 
-using HRManagement.API.Services.Interfaces;
+using HRManagement.API.Exceptions;
+using HRManagement.API.Models;
+using HRManagement.API.Repository;
+using HRManagement.API.Services;
+
 namespace HRManagement.API.Services
 {
-    public class CountryService : ICountryService
+    public class CountryService(
+        ICountryRepository countryRepo,
+        IRegionRepository regionRepo)
+        : ICountryService
     {
-        private readonly ICountryRepository _countryRepo;
-        private readonly IRegionRepository _regionRepo;
-        public CountryService(ICountryRepository countryRepo, IRegionRepository regionRepo)
-        {
-            _countryRepo = countryRepo;
-            _regionRepo = regionRepo;
-        }
         public IEnumerable<CountryDto> GetAllCountries()
+            => countryRepo.GetAll()
+                .Select(c => new CountryDto
+                {
+                    CountryId = c.CountryId.Trim(),
+                    CountryName = c.CountryName,
+                    RegionId = c.RegionId,
+                    RegionName = c.Region?.RegionName
+                });
+
+        public CountryDto? GetCountryById(string id)
         {
-            var countries = _countryRepo.GetAll();
-            return countries.Select(c => new CountryDto
-            {
-                CountryId = c.CountryId.Trim(),
-                CountryName = c.CountryName,
-                RegionId = c.RegionId,
-                RegionName = c.Region?.RegionName
-            });
-        }
-        public CountryDto GetCountryById(string id)
-        {
-            var country = _countryRepo.GetById(id);
-            if (country == null)
-            {
-                return null;
-            }
+            var country = countryRepo.GetById(id);
+
+            if (country is null) return null;
+
             return new CountryDto
             {
                 CountryId = country.CountryId.Trim(),
@@ -39,70 +35,78 @@ namespace HRManagement.API.Services
                 RegionName = country.Region?.RegionName
             };
         }
-        public IEnumerable<CountryDto> GetCountriesByRegion(decimal regionId)
-        {
-            var countries = _countryRepo.GetByRegionId(regionId);
-            return countries.Select(c => new CountryDto
-            {
-                CountryId = c.CountryId.Trim(),
-                CountryName = c.CountryName,
-                RegionId = c.RegionId,
-                RegionName = c.Region?.RegionName
-            });
-        }
+        public IEnumerable<CountryDto> GetCountriesByRegion(
+            decimal regionId)
+            => countryRepo.GetByRegionId(regionId)
+                .Select(c => new CountryDto
+                {
+                    CountryId = c.CountryId.Trim(),
+                    CountryName = c.CountryName,
+                    RegionId = c.RegionId,
+                    RegionName = c.Region?.RegionName
+                });
+
         public void CreateCountry(CreateCountryDto dto)
         {
-            var regionexists = _regionRepo.GetById(dto.RegionId);
-            if (regionexists == null)
-            {
-                throw new Exception($"Region with id '{dto.RegionId}' does not exist");
-            }
-            var countryexists = _countryRepo.GetById(dto.CountryId.Trim().ToUpper());
-            if (countryexists != null)
-            {
-                throw new Exception($"Country with code '{dto.CountryId.ToUpper()}' already exists");
-            }
-            dto.CountryId = dto.CountryId.Trim().ToUpper();
+            var regionExists = regionRepo
+                .GetById(dto.RegionId);
+
+            if (regionExists is null)
+                throw new ValidationException(
+                    $"Region with id {dto.RegionId}" +
+                    $" does not exist");
+
+            var upperCode = dto.CountryId?
+                .Trim().ToUpper() ?? string.Empty;
+
+            var countryExists = countryRepo
+                .GetById(upperCode);
+
+            if (countryExists is not null)
+                throw new DuplicateException(
+                    $"Country '{upperCode}' already exists");
+
             var country = new Country
             {
-                CountryId = dto.CountryId,
+                CountryId = upperCode,
                 CountryName = dto.CountryName,
                 RegionId = dto.RegionId
             };
-            _countryRepo.Add(country);
-            _countryRepo.SaveChanges();
-        }
-        public void UpdateCountry(string id, CreateCountryDto dto)
-        {
-            var country = _countryRepo.GetById(id);
-            if (country == null)
-            {
-                throw new Exception($"Country with code '{id}' not found");
-            }
 
-            var regionExists = _regionRepo.GetById(dto.RegionId);
-            if (regionExists == null)
-            {
-                throw new Exception($"Region with id {dto.RegionId} does not exist");
-            }
+            countryRepo.Add(country);
+            countryRepo.SaveChanges();
+        }
+
+        public void UpdateCountry(
+            string id, CreateCountryDto dto)
+        {
+            var country = countryRepo.GetById(id);
+
+            if (country is null)
+                throw new NotFoundException(
+                    $"Country '{id}' not found");
+
+            var regionExists = regionRepo
+                .GetById(dto.RegionId);
+
+            if (regionExists is null)
+                throw new ValidationException(
+                    $"Region with id {dto.RegionId}" +
+                    $" does not exist");
 
             country.CountryName = dto.CountryName;
             country.RegionId = dto.RegionId;
 
-
-            _countryRepo.Update(country);
-            _countryRepo.SaveChanges();
+            countryRepo.Update(country);
+            countryRepo.SaveChanges();
         }
 
-
         public IEnumerable<RegionDto> GetRegionsForDropdown()
-        {
-            return _regionRepo.GetAll()
+            => regionRepo.GetAll()
                 .Select(r => new RegionDto
                 {
                     RegionId = r.RegionId,
                     RegionName = r.RegionName
                 });
-        }
     }
 }
