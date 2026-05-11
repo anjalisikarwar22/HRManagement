@@ -1,7 +1,9 @@
+﻿using AutoMapper;
 using HRManagement.API.Controllers;
 using HRManagement.API.DTOs.Departments;
 using HRManagement.API.Exceptions;
 using HRManagement.API.Interfaces;
+using HRManagement.API.Mappings;
 using HRManagement.API.Models;
 using HRManagement.API.Services;
 using HRManagement.API.Validators;
@@ -14,6 +16,7 @@ namespace HR.Test
     public class DepartmentTests
     {
         private readonly DepartmentValidator _validator = new DepartmentValidator();
+        private readonly IMapper _mapper = new MapperConfiguration(cfg => cfg.AddProfile<DepartmentMappingProfile>()).CreateMapper();
 
         [Fact]
         public void Positive_ValidateCreate_WithValidData()
@@ -56,7 +59,7 @@ namespace HR.Test
                     return d;
                 });
 
-            var service = new DepartmentService(repo.Object, _validator);
+            var service = new DepartmentService(repo.Object, _validator, _mapper);
             var dto = new CreateDepartmentDto { DepartmentName = " Payroll " };
 
             var result = await service.CreateAsync(dto);
@@ -72,7 +75,7 @@ namespace HR.Test
             repo.Setup(r => r.GetByIdAsync(10))
                 .ReturnsAsync(new Department { DepartmentId = 10, DepartmentName = "Admin" });
 
-            var service = new DepartmentService(repo.Object, _validator);
+            var service = new DepartmentService(repo.Object, _validator, _mapper);
 
             var result = await service.GetByIdAsync(10);
 
@@ -130,3 +133,5 @@ namespace HR.Test
         }
     }
 }
+
+

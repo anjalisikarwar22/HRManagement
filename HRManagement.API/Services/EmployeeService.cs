@@ -20,20 +20,12 @@ namespace HRManagement.API.Services
             _context = context;
         }
 
-        // =====================================
-        // GET ALL EMPLOYEES
-        // =====================================
-
         public async Task<IEnumerable<EmployeeResponseDto>> GetAllEmployeesAsync()
         {
             var employees = await _employeeRepository.GetAllAsync();
 
             return employees.Select(MapEmployee);
         }
-
-        // =====================================
-        // GET EMPLOYEE BY ID
-        // =====================================
 
         public async Task<EmployeeResponseDto> GetEmployeeByIdAsync(int id,int currentUserId, string currentRole)
         {
@@ -51,10 +43,6 @@ namespace HRManagement.API.Services
 
             return MapEmployee(employee);
         }
-
-        // =====================================
-        // CREATE EMPLOYEE
-        // =====================================
 
         public async Task<EmployeeResponseDto> CreateEmployeeAsync( CreateEmployeeDto dto)
         {
@@ -121,10 +109,6 @@ namespace HRManagement.API.Services
             return MapEmployee(employee);
         }
 
-        // =====================================
-        // UPDATE EMPLOYEE
-        // =====================================
-
         public async Task<string> UpdateEmployeeAsync(int id,UpdateEmployeeDto dto)
         {
             var employee = await _employeeRepository.GetByIdAsync(id);
@@ -175,13 +159,9 @@ namespace HRManagement.API.Services
 
                 DateOnly startDate;
 
-                // FIRST HISTORY ENTRY
-
                 if (lastHistory == null){
                     startDate =employee.HireDate;
                 }
-
-                // NEXT HISTORY ENTRY
 
                 else
                 {
@@ -220,10 +200,6 @@ namespace HRManagement.API.Services
             return "Employee updated successfully";
         }
 
-        // =====================================
-        // UPDATE ROLE
-        // =====================================
-
         public async Task<string> UpdateRoleAsync( int id,UpdateRoleDto dto)
         {
             var employee = await _employeeRepository.GetByIdAsync(id);
@@ -242,10 +218,6 @@ namespace HRManagement.API.Services
             return "Role updated successfully";
         }
 
-        // =====================================
-        // MY PROFILE
-        // =====================================
-
         public async Task<EmployeeResponseDto> GetMyProfileAsync(int employeeId)
         {
             var employee = await _employeeRepository.GetByIdAsync(employeeId);
@@ -257,10 +229,6 @@ namespace HRManagement.API.Services
 
             return MapEmployee(employee);
         }
-
-        // =====================================
-        // UPDATE MY PROFILE
-        // =====================================
 
         public async Task<string> UpdateMyProfileAsync(int employeeId,UpdateMyProfileDto dto)
         {
@@ -280,10 +248,6 @@ namespace HRManagement.API.Services
 
             return "Profile updated successfully";
         }
-
-        // =====================================
-        // MY MANAGER
-        // =====================================
 
         public async Task<ManagerResponseDto> GetMyManagerAsync(
             int employeeId)
@@ -307,10 +271,6 @@ namespace HRManagement.API.Services
             };
         }
 
-        // =====================================
-        // MY SUBORDINATES
-        // =====================================
-
         public async Task<IEnumerable<SubordinateResponseDto>>
             GetMySubordinatesAsync(int employeeId)
         {
@@ -325,10 +285,6 @@ namespace HRManagement.API.Services
             });
         }
 
-        // =====================================
-        // GET MANAGERS
-        // =====================================
-
         public async Task<IEnumerable<EmployeeLookupDto>> GetManagersAsync()
         {
             var managers = await _employeeRepository.GetManagersAsync();
@@ -339,10 +295,6 @@ namespace HRManagement.API.Services
                 FullName = e.FirstName + " " + e.LastName
             });
         }
-
-        // =====================================
-        // SEARCH EMPLOYEES
-        // =====================================
 
         public async Task<IEnumerable<SearchEmployeeDto>> SearchEmployeesAsync(string name)
         {
@@ -358,10 +310,6 @@ namespace HRManagement.API.Services
             });
         }
 
-        // =====================================
-        // EMPLOYEES BY DEPARTMENT
-        // =====================================
-
         public async Task<IEnumerable<SearchEmployeeDto>> GetEmployeesByDepartmentAsync(short departmentId)
         {
             var employees = await _employeeRepository.GetEmployeesByDepartmentAsync(departmentId);
@@ -375,10 +323,6 @@ namespace HRManagement.API.Services
                 JobTitle = e.Job?.JobTitle
             });
         }
-
-        // =====================================
-        // MAP EMPLOYEE DTO
-        // =====================================
 
         private EmployeeResponseDto MapEmployee(Employee employee)
         {

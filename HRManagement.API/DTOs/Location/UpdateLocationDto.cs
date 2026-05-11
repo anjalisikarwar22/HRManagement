@@ -1,11 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace HRManagement.API.DTOs.Location
+﻿namespace HRManagement.API.DTOs.Location
 {
     public class UpdateLocationDto
-    {
-        [Required]
-        public string City { get; set; } = string.Empty;
+    {        public string City { get; set; } = string.Empty;
 
         public string? StreetAddress { get; set; }
 
@@ -16,3 +12,4 @@ namespace HRManagement.API.DTOs.Location
         public string? CountryId { get; set; }
     }
 }
+

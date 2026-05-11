@@ -1,6 +1,5 @@
-namespace HRManagement.API.DTOs.Departments
+﻿namespace HRManagement.API.DTOs.Departments
 {
-    // ========================= MAIN DTO =========================
 
     public class DepartmentDto
     {
@@ -13,8 +12,6 @@ namespace HRManagement.API.DTOs.Departments
         public decimal? LocationId { get; set; }
     }
 
-    // ========================= LIST DTO =========================
-
     public class DepartmentListDto
     {
         public decimal DepartmentId { get; set; }
@@ -26,8 +23,6 @@ namespace HRManagement.API.DTOs.Departments
         public decimal? LocationId { get; set; }
     }
 
-    // ========================= CREATE DTO =========================
-
     public class CreateDepartmentDto
     {
         public string DepartmentName { get; set; } = string.Empty;
@@ -36,8 +31,6 @@ namespace HRManagement.API.DTOs.Departments
 
         public decimal? LocationId { get; set; }
     }
-
-    // ========================= UPDATE DTO =========================
 
     public class UpdateDepartmentDto
     {
@@ -48,16 +41,12 @@ namespace HRManagement.API.DTOs.Departments
         public decimal? LocationId { get; set; }
     }
 
-    // ========================= DROPDOWN DTO =========================
-
     public class DepartmentDropdownDto
     {
         public decimal DepartmentId { get; set; }
 
         public string DepartmentName { get; set; } = string.Empty;
     }
-
-    // ========================= PAGED DTO =========================
 
     public class PagedDepartmentDto
     {
@@ -70,8 +59,6 @@ namespace HRManagement.API.DTOs.Departments
 
         public int PageSize { get; set; }
     }
-
-    // ========================= SUMMARY DTO =========================
 
     public class DepartmentSummaryDto
     {

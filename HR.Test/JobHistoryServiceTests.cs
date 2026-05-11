@@ -1,4 +1,4 @@
-using FluentValidation;
+﻿using FluentValidation;
 using FluentValidation.Results;
 using HRManagement.API.DTOs;
 using HRManagement.API.Exceptions;
@@ -37,8 +37,6 @@ namespace HR.Test
             JobId = "IT_PROG",
             DepartmentId = 60
         };
-
-        // ----- POSITIVE -----
 
         [Fact]
         public async Task GetAll_returns_all_records()
@@ -100,8 +98,6 @@ namespace HR.Test
             _repo.Verify(r => r.Add(It.IsAny<JobHistory>()), Times.Once);
         }
 
-        // ----- NEGATIVE -----
-
         [Fact]
         public async Task GetByJob_throws_NotFound_when_job_missing()
         {
@@ -160,3 +156,4 @@ namespace HR.Test
         }
     }
 }
+

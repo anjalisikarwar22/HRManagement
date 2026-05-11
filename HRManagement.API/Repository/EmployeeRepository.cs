@@ -15,10 +15,6 @@ namespace HRManagement.API.Repository
             _context = context;
         }
 
-        // =========================================
-        // GET ALL EMPLOYEES
-        // =========================================
-
         public async Task<List<Employee>>
             GetAllAsync()
         {
@@ -28,10 +24,6 @@ namespace HRManagement.API.Repository
                 .Include(e => e.Manager)
                 .ToListAsync();
         }
-
-        // =========================================
-        // GET EMPLOYEE BY ID
-        // =========================================
 
         public async Task<Employee?>
             GetByIdAsync(int id)
@@ -44,10 +36,6 @@ namespace HRManagement.API.Repository
                     e.EmployeeId == id);
         }
 
-        // =========================================
-        // GET EMPLOYEE BY EMAIL
-        // =========================================
-
         public async Task<Employee?>
             GetByEmailAsync(string email)
         {
@@ -55,10 +43,6 @@ namespace HRManagement.API.Repository
                 .FirstOrDefaultAsync(e =>
                     e.Email == email);
         }
-
-        // =========================================
-        // GET MANAGERS
-        // =========================================
 
         public async Task<List<Employee>>
             GetManagersAsync()
@@ -72,10 +56,6 @@ namespace HRManagement.API.Repository
                 .ToListAsync();
         }
 
-        // =========================================
-        // GET SUBORDINATES
-        // =========================================
-
         public async Task<List<Employee>>
             GetSubordinatesAsync(int managerId)
         {
@@ -85,10 +65,6 @@ namespace HRManagement.API.Repository
                 .Include(e => e.Job)
                 .ToListAsync();
         }
-
-        // =========================================
-        // SEARCH EMPLOYEES
-        // =========================================
 
         public async Task<List<Employee>>
             SearchEmployeesAsync(string name)
@@ -104,10 +80,6 @@ namespace HRManagement.API.Repository
                 .ToListAsync();
         }
 
-        // =========================================
-        // EMPLOYEES BY DEPARTMENT
-        // =========================================
-
         public async Task<List<Employee>>
             GetEmployeesByDepartmentAsync(
                 short departmentId)
@@ -120,10 +92,6 @@ namespace HRManagement.API.Repository
                 .ToListAsync();
         }
 
-        // =========================================
-        // EMPLOYEE EXISTS
-        // =========================================
-
         public async Task<bool>
             EmployeeExistsAsync(int id)
         {
@@ -131,10 +99,6 @@ namespace HRManagement.API.Repository
                 .AnyAsync(e =>
                     e.EmployeeId == id);
         }
-
-        // =========================================
-        // EMAIL EXISTS
-        // =========================================
 
         public async Task<bool>
             EmailExistsAsync(string email)
@@ -144,10 +108,6 @@ namespace HRManagement.API.Repository
                     e.Email == email);
         }
 
-        // =========================================
-        // ADD EMPLOYEE
-        // =========================================
-
         public async Task AddAsync(
             Employee employee)
         {
@@ -155,18 +115,10 @@ namespace HRManagement.API.Repository
                 .AddAsync(employee);
         }
 
-        // =========================================
-        // UPDATE EMPLOYEE
-        // =========================================
-
         public void Update(Employee employee)
         {
             _context.Employees.Update(employee);
         }
-
-        // =========================================
-        // SAVE CHANGES
-        // =========================================
 
         public async Task SaveChangesAsync()
         {
@@ -175,3 +127,4 @@ namespace HRManagement.API.Repository
     }
 
 }
+

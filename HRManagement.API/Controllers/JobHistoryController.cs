@@ -1,4 +1,4 @@
-using HRManagement.API.Common;
+﻿using HRManagement.API.Common;
 using HRManagement.API.DTOs;
 using HRManagement.API.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -8,18 +8,12 @@ namespace HRManagement.API.Controllers
 {
     [Route("api/jobhistory")]
     [ApiController]
-    // Authentication required for all actions in this controller.
-    // Uncomment when AuthController is merged.
-    // [Authorize]
     public class JobHistoryController : ControllerBase
     {
         private readonly IJobHistoryService _service;
 
         public JobHistoryController(IJobHistoryService service) => _service = service;
-
-        // GET /api/jobhistory — Admin only
         [HttpGet]
-        // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll()
         {
             var data = await _service.GetAll();
@@ -30,10 +24,7 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
-
-        // GET /api/jobhistory/count — Admin only
         [HttpGet("count")]
-        // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Count()
         {
             var data = await _service.Count();
@@ -44,10 +35,7 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
-
-        // GET /api/jobhistory/by-job/{jobId} — Admin + Employee
         [HttpGet("by-job/{jobId:length(1,10)}")]
-        // [Authorize(Roles = "Admin,Employee")]
         public async Task<IActionResult> ByJob(string jobId)
         {
             var data = await _service.GetByJob(jobId);
@@ -58,10 +46,7 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
-
-        // GET /api/jobhistory/by-employee/{empId} — Admin + Employee
         [HttpGet("by-employee/{empId:decimal:min(1)}")]
-        // [Authorize(Roles = "Admin,Employee")]
         public async Task<IActionResult> ByEmployee(decimal empId)
         {
             var data = await _service.GetByEmployee(empId);
@@ -72,10 +57,7 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
-
-        // GET /api/jobhistory/by-department/{deptId} — Admin only
         [HttpGet("by-department/{deptId:decimal:min(1)}")]
-        // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ByDepartment(decimal deptId)
         {
             var data = await _service.GetByDepartment(deptId);
@@ -86,10 +68,7 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
-
-        // POST /api/jobhistory — Admin only
         [HttpPost]
-        // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] JobHistoryDTO dto)
         {
             var data = await _service.Create(dto);
@@ -102,3 +81,4 @@ namespace HRManagement.API.Controllers
         }
     }
 }
+

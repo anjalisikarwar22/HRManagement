@@ -6,6 +6,7 @@ using HRManagement.API.DTOs;
 using HRManagement.API.DTOs.Departments;
 using HRManagement.API.Filters;
 using HRManagement.API.Interfaces;
+using HRManagement.API.Mappings;
 using HRManagement.API.Middleware;
 using HRManagement.API.Repositories;
 using HRManagement.API.Repository;
@@ -28,6 +29,8 @@ builder.Services.AddControllers(options =>
 });
 
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddAutoMapper(typeof(DepartmentMappingProfile));
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc(
@@ -155,3 +158,4 @@ app.Run();
 public partial class Program
 {
 }
+

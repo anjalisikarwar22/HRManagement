@@ -3,22 +3,17 @@ using HRManagement.API.Exceptions;
 using HRManagement.API.Models;
 using HRManagement.API.Repository;
 using HRManagement.API.Services;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace HR.Test
 {
-    [TestClass]
     public class CountryServiceTests
     {
         private Mock<ICountryRepository>? _mockCountryRepo;
         private Mock<IRegionRepository>? _mockRegionRepo;
         private CountryService? _service;
 
-        [TestInitialize]
-        public void Setup()
+        public CountryServiceTests()
         {
             _mockCountryRepo = new Mock<ICountryRepository>();
             _mockRegionRepo = new Mock<IRegionRepository>();
@@ -27,7 +22,7 @@ namespace HR.Test
                 _mockRegionRepo.Object);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAllCountries_WhenCalled_ReturnsCorrectDtos()
         {
             var fakeData = new List<Country>
@@ -51,12 +46,12 @@ namespace HR.Test
 
             var result = _service!.GetAllCountries().ToList();
 
-            Assert.AreEqual(2, result.Count);
-            Assert.AreEqual("US", result[0].CountryId);
-            Assert.AreEqual("Americas", result[0].RegionName);
+            Assert.Equal(2, result.Count);
+            Assert.Equal("US", result[0].CountryId);
+            Assert.Equal("Americas", result[0].RegionName);
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateCountry_WithValidData_UppercasesAndSaves()
         {
             var dto = new CreateCountryDto
@@ -78,7 +73,8 @@ namespace HR.Test
                 "Add should be called with uppercased CountryId PK");
             _mockCountryRepo.Verify(r => r.SaveChanges(), Times.Once);
         }
-        [TestMethod]
+
+        [Fact]
         public void CreateCountry_WhenDuplicate_ThrowsDuplicateException()
         {
             var dto = new CreateCountryDto
@@ -92,10 +88,7 @@ namespace HR.Test
             _mockCountryRepo!.Setup(r => r.GetById("US"))
                 .Returns(new Country { CountryId = "US", CountryName = "United States" });
 
-            bool thrown = false;
-            try { _service!.CreateCountry(dto); }
-            catch (DuplicateException) { thrown = true; }
-            Assert.IsTrue(thrown, "DuplicateException should be thrown");
+            Assert.Throws<DuplicateException>(() => _service!.CreateCountry(dto));
         }
     }
 }

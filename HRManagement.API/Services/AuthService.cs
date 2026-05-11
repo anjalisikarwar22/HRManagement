@@ -23,10 +23,6 @@ namespace HRManagement.API.Services
             _context =context;
         }
 
-        // =====================================
-        // REGISTER
-        // =====================================
-
         public async Task<string>
             RegisterAsync(RegisterDto dto)
         {
@@ -53,10 +49,6 @@ namespace HRManagement.API.Services
 
             return  "Account activated successfully";
         }
-
-        // =====================================
-        // LOGIN
-        // =====================================
 
         public async Task<object> LoginAsync(LoginDto dto)
         {
@@ -92,10 +84,6 @@ namespace HRManagement.API.Services
                 employee.Role
             };
         }
-
-        // =====================================
-        // CURRENT USER
-        // =====================================
 
         public async Task<object>
             GetCurrentUserAsync(decimal employeeId)
@@ -146,3 +134,4 @@ namespace HRManagement.API.Services
 
     }
 }
+

@@ -19,10 +19,6 @@ namespace HRManagement.API.Controllers
             _employeeService = employeeService;
         }
 
-        // =====================================
-        // GET ALL EMPLOYEES
-        // =====================================
-
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetAllEmployees()
@@ -35,10 +31,6 @@ namespace HRManagement.API.Controllers
                     "Employees fetched successfully",
                     employees));
         }
-
-        // =====================================
-        // GET EMPLOYEE BY ID
-        // =====================================
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEmployeeById(int id)
@@ -58,10 +50,6 @@ namespace HRManagement.API.Controllers
                     employee));
         }
 
-        // =====================================
-        // CREATE EMPLOYEE
-        // =====================================
-
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateEmployee(CreateEmployeeDto dto)
@@ -74,10 +62,6 @@ namespace HRManagement.API.Controllers
                     "Employee created successfully",
                     employee));
         }
-
-        // =====================================
-        // UPDATE EMPLOYEE
-        // =====================================
 
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
@@ -92,10 +76,6 @@ namespace HRManagement.API.Controllers
                     null));
         }
 
-        // =====================================
-        // UPDATE ROLE
-        // =====================================
-
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}/role")]
         public async Task<IActionResult> UpdateRole(int id,UpdateRoleDto dto)
@@ -108,10 +88,6 @@ namespace HRManagement.API.Controllers
                     message,
                     null));
         }
-
-        // =====================================
-        // GET MY PROFILE
-        // =====================================
 
         [HttpGet("me")]
         public async Task<IActionResult> GetMyProfile()
@@ -130,10 +106,6 @@ namespace HRManagement.API.Controllers
                     employee));
         }
 
-        // =====================================
-        // UPDATE MY PROFILE
-        // =====================================
-
         [HttpPut("me")]
         public async Task<IActionResult> UpdateMyProfile( UpdateMyProfileDto dto)
         {
@@ -149,10 +121,6 @@ namespace HRManagement.API.Controllers
                     null));
         }
 
-        // =====================================
-        // GET MY MANAGER
-        // =====================================
-
         [HttpGet("my-manager")]
         public async Task<IActionResult> GetMyManager()
         {
@@ -167,10 +135,6 @@ namespace HRManagement.API.Controllers
                     "Manager fetched successfully",
                     manager));
         }
-
-        // =====================================
-        // GET MY SUBORDINATES
-        // =====================================
 
         [HttpGet("my-subordinates")]
         public async Task<IActionResult> GetMySubordinates()
@@ -190,10 +154,6 @@ namespace HRManagement.API.Controllers
                     employees));
         }
 
-        // =====================================
-        // GET MANAGERS
-        // =====================================
-
         [Authorize(Roles = "Admin")]
         [HttpGet("managers")]
         public async Task<IActionResult> GetManagers()
@@ -207,10 +167,6 @@ namespace HRManagement.API.Controllers
                     managers));
         }
 
-        // =====================================
-        // SEARCH EMPLOYEES
-        // =====================================
-
         [Authorize(Roles = "Admin")]
         [HttpGet("search")]
         public async Task<IActionResult> SearchEmployees([FromQuery] string name)
@@ -223,10 +179,6 @@ namespace HRManagement.API.Controllers
                     "Employees fetched successfully",
                     employees));
         }
-
-        // =====================================
-        // EMPLOYEES BY DEPARTMENT
-        // =====================================
 
         [Authorize(Roles = "Admin")]
         [HttpGet("by-department/{departmentId}")]
