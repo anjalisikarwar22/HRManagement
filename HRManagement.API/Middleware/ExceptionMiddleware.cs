@@ -69,7 +69,7 @@ namespace HRManagement.API.Middleware
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)statusCode;
 
-            var response = ApiResponse<object>.FailureResponse(message);
+            var response = new ApiResponse<object>(false, message, null);
             await context.Response.WriteAsync(JsonSerializer.Serialize(response));
         }
     }
