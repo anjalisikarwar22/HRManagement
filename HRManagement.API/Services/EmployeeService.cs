@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using HRManagement.API.Data;
 using HRManagement.API.DTOs.Employee;
 using HRManagement.API.Exceptions;
+using HRManagement.API.Interfaces;
 using HRManagement.API.Models;
 using HRManagement.API.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -11,14 +11,20 @@ namespace HRManagement.API.Services
     public class EmployeeService : IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository;
-        private readonly HRContext _context;
         private readonly IMapper _mapper;
 
-        public EmployeeService(IEmployeeRepository employeeRepository,HRContext context, IMapper mapper)
+        private readonly IJobHistoryRepository _jobHistoryRepository;
+        private readonly IJobRepository _jobRepository;
+        private readonly IDepartmentRepository _departmentRepository;
+
+        public EmployeeService(IEmployeeRepository employeeRepository, IMapper mapper, IJobHistoryRepository jobHistoryRepository,
+            IJobRepository jobRepository, IDepartmentRepository departmentRepository)
         {
             _employeeRepository = employeeRepository;
-            _context = context;
             _mapper = mapper;
+            _jobHistoryRepository = jobHistoryRepository;
+            _jobRepository = jobRepository;
+            _departmentRepository = departmentRepository;
 
         }
 
@@ -30,9 +36,9 @@ namespace HRManagement.API.Services
             return _mapper.Map<IEnumerable<EmployeeResponseDto>>(employees);
         }
 
-       
 
-        public async Task<EmployeeResponseDto> GetEmployeeByIdAsync(decimal id,decimal currentUserId, string currentRole)
+
+        public async Task<EmployeeResponseDto> GetEmployeeByIdAsync(decimal id, decimal currentUserId, string currentRole)
         {
             if (currentRole != "Admin" && currentUserId != id)
             {
@@ -50,16 +56,17 @@ namespace HRManagement.API.Services
         }
 
 
-        public async Task<EmployeeResponseDto> CreateEmployeeAsync( CreateEmployeeDto dto)
+        public async Task<EmployeeResponseDto> CreateEmployeeAsync(CreateEmployeeDto dto)
         {
-            var job = await _context.Jobs.FindAsync(dto.JobId);
+            var job = await _jobRepository.GetById(dto.JobId);
+
 
             if (job == null)
             {
                 throw new BadRequestException("Invalid Job ID");
             }
 
-            var department = await _context.Departments.FindAsync(dto.DepartmentId);
+            var department = await _departmentRepository.GetByIdAsync((decimal)dto.DepartmentId);
 
             if (department == null)
             {
@@ -68,7 +75,7 @@ namespace HRManagement.API.Services
 
             if (dto.ManagerId != null)
             {
-                bool managerExists =await _employeeRepository.EmployeeExistsAsync(dto.ManagerId.Value);
+                bool managerExists = await _employeeRepository.EmployeeExistsAsync(dto.ManagerId.Value);
 
                 if (!managerExists)
                 {
@@ -95,11 +102,11 @@ namespace HRManagement.API.Services
             var employee = _mapper.Map<Employee>(dto);
 
 
-            employee.EmployeeId= await _employeeRepository.GetMaxEmployeeIdAsync() + 1;
+            employee.EmployeeId = await _employeeRepository.GetMaxEmployeeIdAsync() + 1;
 
             employee.Salary = salary;
 
-            employee.HireDate =DateOnly.FromDateTime( DateTime.Now);
+            employee.HireDate = DateOnly.FromDateTime(DateTime.Now);
 
             employee.Password = null;
 
@@ -111,8 +118,8 @@ namespace HRManagement.API.Services
             return _mapper.Map<EmployeeResponseDto>(employee);
         }
 
-        
-        public async Task<string> UpdateEmployeeAsync(decimal id,UpdateEmployeeDto dto)
+
+        public async Task<string> UpdateEmployeeAsync(decimal id, UpdateEmployeeDto dto)
         {
             var employee = await _employeeRepository.GetByIdAsync(id);
 
@@ -121,14 +128,14 @@ namespace HRManagement.API.Services
                 throw new NotFoundException("Employee not found");
             }
 
-            var job = await _context.Jobs.FindAsync(dto.JobId);
+            var job = await _jobRepository.GetById(dto.JobId);
 
             if (job == null)
             {
                 throw new BadRequestException("Invalid Job ID");
             }
 
-            var department =await _context.Departments.FindAsync(dto.DepartmentId);
+            var department = await _departmentRepository.GetByIdAsync((decimal)dto.DepartmentId);
 
             if (department == null)
             {
@@ -137,7 +144,7 @@ namespace HRManagement.API.Services
 
             if (dto.ManagerId != null)
             {
-                bool managerExists =await _employeeRepository.EmployeeExistsAsync( dto.ManagerId.Value);
+                bool managerExists = await _employeeRepository.EmployeeExistsAsync(dto.ManagerId.Value);
 
                 if (!managerExists)
                 {
@@ -151,40 +158,41 @@ namespace HRManagement.API.Services
             }
 
 
-            bool departmentChanged =employee.DepartmentId !=dto.DepartmentId;
+            bool departmentChanged = employee.DepartmentId != dto.DepartmentId;
 
-            bool jobChanged =employee.JobId !=dto.JobId;
+            bool jobChanged = employee.JobId != dto.JobId;
 
-            if (departmentChanged || jobChanged){
-                var lastHistory =await _context.JobHistories.Where(j =>j.EmployeeId ==employee.EmployeeId)
-                                                .OrderByDescending(j =>j.EndDate)
-                                                .FirstOrDefaultAsync();
+            if (departmentChanged || jobChanged)
+            {
+                var lastHistory =await _jobHistoryRepository.GetLatestHistoryAsync(employee.EmployeeId);
 
                 DateOnly startDate;
 
 
-                if (lastHistory == null){
-                    startDate =employee.HireDate;
+                if (lastHistory == null)
+                {
+                    startDate = employee.HireDate;
                 }
 
                 else
                 {
-                    startDate =lastHistory.EndDate;
+                    startDate = lastHistory.EndDate;
                 }
 
-                var jobHistory = new JobHistory{
-                        EmployeeId =employee.EmployeeId,
+                var jobHistory = new JobHistory
+                {
+                    EmployeeId = employee.EmployeeId,
 
-                        StartDate =startDate,
+                    StartDate = startDate,
 
-                        EndDate =DateOnly.FromDateTime(DateTime.Now),
+                    EndDate = DateOnly.FromDateTime(DateTime.Now),
 
-                        JobId =employee.JobId,
+                    JobId = employee.JobId,
 
-                        DepartmentId =employee.DepartmentId
+                    DepartmentId = employee.DepartmentId
                 };
 
-                await _context.JobHistories.AddAsync(jobHistory);
+                await _jobHistoryRepository.Add(jobHistory);
             }
 
             _mapper.Map(dto, employee);
@@ -196,7 +204,7 @@ namespace HRManagement.API.Services
             return "Employee updated successfully";
         }
 
-        
+
 
         public async Task<EmployeeResponseDto> GetMyProfileAsync(decimal employeeId)
         {
@@ -210,8 +218,8 @@ namespace HRManagement.API.Services
             return _mapper.Map<EmployeeResponseDto>(employee);
         }
 
-        
-        public async Task<string> UpdateMyProfileAsync(decimal employeeId,UpdateMyProfileDto dto)
+
+        public async Task<string> UpdateMyProfileAsync(decimal employeeId, UpdateMyProfileDto dto)
         {
             var employee = await _employeeRepository.GetByIdAsync(employeeId);
 
@@ -229,7 +237,7 @@ namespace HRManagement.API.Services
             return "Profile updated successfully";
         }
 
-        
+
 
         public async Task<EmployeeLookupDto> GetMyManagerAsync(decimal employeeId)
         {
@@ -245,16 +253,16 @@ namespace HRManagement.API.Services
                 throw new NotFoundException("Manager not assigned");
             }
 
-            return _mapper.Map< EmployeeLookupDto>(employee.Manager);
+            return _mapper.Map<EmployeeLookupDto>(employee.Manager);
         }
 
-        
+
 
         public async Task<IEnumerable<EmployeeSummaryDto>> GetMySubordinatesAsync(decimal employeeId)
         {
             var employees = await _employeeRepository.GetSubordinatesAsync(employeeId);
 
-            return _mapper.Map< IEnumerable<EmployeeSummaryDto>>(employees);
+            return _mapper.Map<IEnumerable<EmployeeSummaryDto>>(employees);
         }
 
         public async Task<IEnumerable<EmployeeLookupDto>> GetManagersAsync()
@@ -264,17 +272,17 @@ namespace HRManagement.API.Services
             return _mapper.Map<IEnumerable<EmployeeLookupDto>>(managers);
         }
 
-        
+
 
         public async Task<IEnumerable<EmployeeSummaryDto>> SearchEmployeesAsync(string name)
         {
-            var employees =await _employeeRepository.SearchEmployeesAsync(name);
+            var employees = await _employeeRepository.SearchEmployeesAsync(name);
 
             return _mapper.Map<IEnumerable<EmployeeSummaryDto>>(employees);
         }
 
-        
-        
+
+
 
         public async Task<IEnumerable<EmployeeSummaryDto>> GetEmployeesByDepartmentAsync(short departmentId)
         {
@@ -283,8 +291,8 @@ namespace HRManagement.API.Services
             return _mapper.Map<IEnumerable<EmployeeSummaryDto>>(employees);
         }
 
-        
 
-       
+
+
     }
 }

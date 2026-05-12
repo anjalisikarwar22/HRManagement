@@ -11,5 +11,6 @@ namespace HRManagement.API.Repository
         Task<List<JobHistory>> GetByDepartment(decimal deptId);
         Task<JobHistory?> GetByKey(decimal empId, DateOnly startDate);
         Task Add(JobHistory history);
+        Task<JobHistory?> GetLatestHistoryAsync(decimal employeeId);
     }
 }

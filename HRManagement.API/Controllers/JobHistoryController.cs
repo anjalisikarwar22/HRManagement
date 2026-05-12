@@ -1,4 +1,4 @@
-﻿using HRManagement.API.Common;
+using HRManagement.API.Common;
 using HRManagement.API.DTOs;
 using HRManagement.API.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -14,11 +14,10 @@ namespace HRManagement.API.Controllers
         private readonly IJobHistoryService _service;
 
         public JobHistoryController(IJobHistoryService service) => _service = service;
-        [HttpGet]
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<ApiResponse<List<JobHistoryDTO>>>> GetAll()
         {
             var data = await _service.GetAll();
             return Ok(new ApiResponse<List<JobHistoryDTO>>
@@ -28,11 +27,10 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
-        [HttpGet("count")]
 
         [HttpGet("dropdown")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Dropdown()
+        public async Task<ActionResult<ApiResponse<object>>> Dropdown()
         {
             var data = await _service.GetDropdown();
             return Ok(new ApiResponse<object>(
@@ -43,7 +41,7 @@ namespace HRManagement.API.Controllers
 
         [HttpGet("count")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Count()
+        public async Task<ActionResult<ApiResponse<int>>> Count()
         {
             var data = await _service.Count();
             return Ok(new ApiResponse<int>
@@ -53,11 +51,10 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
-        [HttpGet("by-job/{jobId:length(1,10)}")]
 
         [HttpGet("by-job/{jobId:length(1,10)}")]
         [Authorize(Roles = "Admin,Employee")]
-        public async Task<IActionResult> ByJob(string jobId)
+        public async Task<ActionResult<ApiResponse<List<JobHistoryDTO>>>> ByJob(string jobId)
         {
             var data = await _service.GetByJob(jobId);
             return Ok(new ApiResponse<List<JobHistoryDTO>>
@@ -67,11 +64,10 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
-        [HttpGet("by-employee/{empId:decimal:min(1)}")]
 
         [HttpGet("by-employee/{empId:decimal:min(1)}")]
         [Authorize(Roles = "Admin,Employee")]
-        public async Task<IActionResult> ByEmployee(decimal empId)
+        public async Task<ActionResult<ApiResponse<List<JobHistoryDTO>>>> ByEmployee(decimal empId)
         {
             var data = await _service.GetByEmployee(empId);
             return Ok(new ApiResponse<List<JobHistoryDTO>>
@@ -81,11 +77,10 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
-        [HttpGet("by-department/{deptId:decimal:min(1)}")]
 
         [HttpGet("by-department/{deptId:decimal:min(1)}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> ByDepartment(decimal deptId)
+        public async Task<ActionResult<ApiResponse<List<JobHistoryDTO>>>> ByDepartment(decimal deptId)
         {
             var data = await _service.GetByDepartment(deptId);
             return Ok(new ApiResponse<List<JobHistoryDTO>>
@@ -95,11 +90,10 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
-        [HttpPost]
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([FromBody] JobHistoryDTO dto)
+        public async Task<ActionResult<ApiResponse<JobHistoryDTO>>> Create([FromBody] JobHistoryDTO dto)
         {
             var data = await _service.Create(dto);
             return Created($"/api/jobhistory/by-employee/{data.EmployeeId}", new ApiResponse<JobHistoryDTO>
@@ -111,4 +105,3 @@ namespace HRManagement.API.Controllers
         }
     }
 }
-

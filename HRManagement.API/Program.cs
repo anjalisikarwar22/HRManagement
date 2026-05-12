@@ -64,7 +64,16 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddDbContext<HRContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlOpts =>
+        {
+            sqlOpts.CommandTimeout(180);
+            sqlOpts.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(10),
+                errorNumbersToAdd: null);
+        }));
 
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<IJobHistoryRepository, JobHistoryRepository>();
@@ -128,11 +137,49 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
         };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnChallenge = async context =>
+            {
+                context.HandleResponse();
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                context.Response.ContentType = "application/json";
+                var body = new ApiResponse<object>(false,
+                    "Unauthorized. Please log in with a valid token.", null);
+                await context.Response.WriteAsync(
+                    System.Text.Json.JsonSerializer.Serialize(body));
+            },
+            OnForbidden = async context =>
+            {
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                context.Response.ContentType = "application/json";
+                var body = new ApiResponse<object>(false,
+                    "Forbidden. You do not have permission to access this resource.", null);
+                await context.Response.WriteAsync(
+                    System.Text.Json.JsonSerializer.Serialize(body));
+            }
+        };
     });
 
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+// Warm up the DB connection so the first real request isn't slow
+using (var scope = app.Services.CreateScope())
+{
+    try
+    {
+        var db = scope.ServiceProvider.GetRequiredService<HRContext>();
+        db.Database.OpenConnection();
+        db.Database.CloseConnection();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[Startup warmup] DB warmup failed: {ex.Message}");
+    }
+}
 
 app.UseMiddleware<ExceptionMiddleware>();
 

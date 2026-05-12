@@ -31,5 +31,11 @@ namespace HRManagement.API.Repository
             _db.JobHistories.Add(history);
             await _db.SaveChangesAsync();
         }
+        public async Task<JobHistory?> GetLatestHistoryAsync(decimal employeeId)
+        {
+            return await _db.JobHistories.Where(j => j.EmployeeId == employeeId)
+                                                  .OrderByDescending(j => j.EndDate)
+                                                  .FirstOrDefaultAsync();
+        }
     }
 }

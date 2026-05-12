@@ -11,6 +11,7 @@ namespace HRManagement.API.Controllers
     [ApiController]
     [Route("api/departments")]
     [Produces("application/json")]
+    [Authorize]
     [ServiceFilter(typeof(DepartmentHeaderFilter))]
     public class DepartmentsController : ControllerBase
     {
@@ -21,8 +22,8 @@ namespace HRManagement.API.Controllers
             _departmentService = departmentService;
         }
 
-        [Authorize]
         [HttpGet]
+        [Authorize(Roles = "Admin,Employee")]
         [ProducesResponseType(typeof(ApiResponse<IEnumerable<DepartmentListDto>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAll()
@@ -32,8 +33,8 @@ namespace HRManagement.API.Controllers
                 departments, "Departments retrieved successfully."));
         }
 
-        [Authorize]
         [HttpGet("{id:int:min(1):max(9999)}")]
+        [Authorize(Roles = "Admin,Employee")]
         [ProducesResponseType(typeof(ApiResponse<DepartmentDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
@@ -49,8 +50,8 @@ namespace HRManagement.API.Controllers
                 department, "Department retrieved successfully."));
         }
 
-        [Authorize]
         [HttpGet("location/{locationId:int:min(1):max(9999)}")]
+        [Authorize(Roles = "Admin,Employee")]
         [ProducesResponseType(typeof(ApiResponse<IEnumerable<DepartmentListDto>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
@@ -61,8 +62,8 @@ namespace HRManagement.API.Controllers
                 departments, $"Departments for location {locationId} retrieved successfully."));
         }
 
-        [Authorize]
         [HttpGet("manager/{managerId:int:min(1):max(999999)}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(ApiResponse<IEnumerable<DepartmentListDto>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
@@ -73,8 +74,8 @@ namespace HRManagement.API.Controllers
                 departments, $"Departments for manager {managerId} retrieved successfully."));
         }
 
-        [Authorize]
         [HttpGet("search")]
+        [Authorize(Roles = "Admin,Employee")]
         [ProducesResponseType(typeof(ApiResponse<IEnumerable<DepartmentListDto>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
@@ -85,8 +86,8 @@ namespace HRManagement.API.Controllers
                 departments, "Search completed successfully."));
         }
 
-        [Authorize]
         [HttpGet("paged")]
+        [Authorize(Roles = "Admin,Employee")]
         [ProducesResponseType(typeof(ApiResponse<PagedDepartmentDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
@@ -99,8 +100,8 @@ namespace HRManagement.API.Controllers
                 result, "Paged departments retrieved successfully."));
         }
 
-        [Authorize]
         [HttpGet("summary")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(ApiResponse<DepartmentSummaryDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetSummary()
@@ -110,8 +111,8 @@ namespace HRManagement.API.Controllers
                 summary, "Department summary retrieved successfully."));
         }
 
-        [Authorize]
         [HttpGet("count")]
+        [Authorize(Roles = "Admin,Employee")]
         [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetCount()
@@ -120,8 +121,8 @@ namespace HRManagement.API.Controllers
             return Ok(ApiResponse<int>.SuccessResponse(count, $"Total departments: {count}"));
         }
 
-        [Authorize]
         [HttpGet("dropdown")]
+        [Authorize(Roles = "Admin,Employee")]
         [ProducesResponseType(typeof(ApiResponse<IEnumerable<DepartmentDropdownDto>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetDropdown()
@@ -131,8 +132,8 @@ namespace HRManagement.API.Controllers
                 items, "Dropdown data retrieved successfully."));
         }
 
-        [Authorize]
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(ApiResponse<DepartmentDto>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
@@ -157,8 +158,8 @@ namespace HRManagement.API.Controllers
             }
         }
 
-        [Authorize]
         [HttpPut("{id:int:min(1):max(9999)}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(ApiResponse<DepartmentDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
@@ -193,4 +194,3 @@ namespace HRManagement.API.Controllers
         }
     }
 }
-
