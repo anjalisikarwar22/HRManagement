@@ -1,0 +1,20 @@
+﻿@model HRManagement.MVC.Models.Job.JobRowVM
+@{
+    ViewData["Title"] = "Job Details";
+}
+<section class="page-header">
+    <div>
+        <h1>@Model.JobTitle</h1>
+        <p>Job code @Model.JobId</p>
+    </div>
+    <a class="btn btn-outline-primary" asp-action="Index">Back</a>
+</section>
+<section class="panel details-panel">
+    <dl>
+        <dt>Job ID</dt><dd>@Model.JobId</dd>
+        <dt>Minimum Salary</dt><dd>@((Model.MinSalary ?? 0).ToString("C0"))</dd>
+        <dt>Maximum Salary</dt><dd>@((Model.MaxSalary ?? 0).ToString("C0"))</dd>
+        <dt>Salary Band</dt><dd>@((Model.SalarySpread ?? 0).ToString("C0"))</dd>
+    </dl>
+    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.JobId">Edit Job</a>
+</section>

@@ -1,4 +1,4 @@
-﻿using HRManagement.API.Common;
+using HRManagement.API.Common;
 using HRManagement.API.DTOs.Departments;
 using HRManagement.API.Exceptions;
 using HRManagement.API.Filters;
@@ -44,13 +44,7 @@ namespace HRManagement.API.Controllers
             var department = await _departmentService.GetByIdAsync(id);
 
             if (department == null)
-<<<<<<< Updated upstream
                 return NotFound(new ApiResponse<object>(false, $"Department {id} was not found.", null));
-=======
-            {
-                return NotFound(ApiResponse<object>.FailureResponse($"Department {id} was not found."));
-            }
->>>>>>> Stashed changes
 
             return Ok(new ApiResponse<DepartmentDto>(
                 true, "Department retrieved successfully.", department));

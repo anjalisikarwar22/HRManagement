@@ -14,10 +14,7 @@ namespace HRManagement.API.Controllers
         private readonly IJobService _service;
 
         public JobsController(IJobService service) => _service = service;
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
         [HttpGet]
         [Authorize(Roles = "Admin,Employee")]
         public async Task<ActionResult<ApiResponse<List<JobDTO>>>> GetAll()
@@ -30,10 +27,7 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
         [HttpGet("dropdown")]
         [Authorize(Roles = "Admin,Employee")]
         public async Task<ActionResult<ApiResponse<object>>> Dropdown()
@@ -57,10 +51,7 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
         [HttpGet("search")]
         [Authorize(Roles = "Admin,Employee")]
         public async Task<ActionResult<ApiResponse<List<JobDTO>>>> Search([FromQuery] string title)
@@ -73,10 +64,7 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
         [HttpGet("by-salary-range")]
         [Authorize(Roles = "Admin,Employee")]
         public async Task<ActionResult<ApiResponse<List<JobDTO>>>> BySalaryRange(
@@ -91,10 +79,7 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
         [HttpGet("{id:length(1,10)}")]
         [Authorize(Roles = "Admin,Employee")]
         public async Task<ActionResult<ApiResponse<JobDTO>>> GetById(string id)
@@ -107,10 +92,7 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
         [HttpGet("{id:length(1,10)}/employees")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ApiResponse<List<EmployeeDTO>>>> Employees(string id)
@@ -123,10 +105,7 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ApiResponse<JobDTO>>> Create([FromBody] JobDTO dto)
@@ -139,10 +118,7 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
         [HttpPut("{id:length(1,10)}")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ApiResponse<JobDTO>>> Update(string id, [FromBody] JobDTO dto)
@@ -155,10 +131,7 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
         [HttpPatch("{id:length(1,10)}/salary-range")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ApiResponse<JobDTO>>> UpdateSalaryRange(string id, [FromBody] SalaryDTO dto)
@@ -173,8 +146,3 @@ namespace HRManagement.API.Controllers
         }
     }
 }
-<<<<<<< Updated upstream
-=======
-
-
->>>>>>> Stashed changes

@@ -1,0 +1,104 @@
+﻿@model HRManagement.MVC.Models.Department.DepartmentListPageVM
+@{
+    ViewData["Title"] = "Departments";
+    var firstItem = Model.TotalCount == 0 ? 0 : ((Model.PageNumber - 1) * Model.PageSize) + 1;
+    var lastItem = Math.Min(Model.PageNumber * Model.PageSize, Model.TotalCount);
+}
+<section class="page-header">
+    <div>
+        <h1>Departments</h1>
+        <p>Manage organizational units, department heads, and geographical allocations.</p>
+    </div>
+    <a class="btn btn-primary" asp-action="Create">Create Department</a>
+</section>
+
+<div class="dashboard-grid departments-grid">
+    <section class="panel data-panel">
+        <form class="toolbar" method="get" data-filter-form>
+            <select class="form-select" name="locationId" asp-for="LocationId" asp-items="Model.Locations" aria-label="Filter by location"></select>
+            <input class="form-control" type="search" name="search" value="@Model.Search" placeholder="Search by department name..." />
+            <input type="hidden" name="pageSize" value="@Model.PageSize" />
+            <button class="btn btn-outline-primary" type="submit">Filter</button>
+            <a class="btn btn-light" asp-action="Index">Reset</a>
+        </form>
+        <div class="table-meta">
+            <span>Showing @firstItem-@lastItem of @Model.TotalCount departments</span>
+            @if (!string.IsNullOrWhiteSpace(Model.StatusMessage))
+            {
+                <span>@Model.StatusMessage</span>
+            }
+        </div>
+        <div class="table-responsive">
+            <table class="table app-table" data-dashboard-table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Department Name</th>
+                        <th>Manager</th>
+                        <th>Location</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Departments)
+                    {
+                        <tr>
+                            <td>#DEP-@item.DepartmentId.ToString("000")</td>
+                            <td><strong>@item.DepartmentName</strong></td>
+                            <td>@item.ManagerDisplay</td>
+                            <td>@item.LocationDisplay</td>
+                            <td class="text-end action-cell">
+                                <a class="table-action" asp-action="Details" asp-route-id="@item.DepartmentId">Details</a>
+                                <a class="table-action" asp-action="Edit" asp-route-id="@item.DepartmentId">Edit</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="pager-bar">
+            <a class="btn btn-outline-secondary @(Model.HasPreviousPage ? "" : "disabled")"
+               asp-action="Index"
+               asp-route-search="@Model.Search"
+               asp-route-locationId="@Model.LocationId"
+               asp-route-pageNumber="@(Model.PageNumber - 1)"
+               asp-route-pageSize="@Model.PageSize">Previous</a>
+            <span>Page @Model.PageNumber of @Model.TotalPages</span>
+            <a class="btn btn-outline-secondary @(Model.HasNextPage ? "" : "disabled")"
+               asp-action="Index"
+               asp-route-search="@Model.Search"
+               asp-route-locationId="@Model.LocationId"
+               asp-route-pageNumber="@(Model.PageNumber + 1)"
+               asp-route-pageSize="@Model.PageSize">Next</a>
+        </div>
+    </section>
+
+    <aside class="side-stack">
+        <section class="metric-card blue-card">
+            <h2>Analytics Preview</h2>
+            <div class="metric-block">
+                <span>Total Departments</span>
+                <strong>@Model.Summary.TotalDepartments</strong>
+                <small>@Model.Summary.DepartmentsWithManager managed units</small>
+            </div>
+            <div class="metric-block">
+                <span>Location Coverage</span>
+                <strong>@Model.Summary.DepartmentsWithLocation</strong>
+                <small>@Model.Summary.DepartmentsWithoutLocation without location</small>
+            </div>
+            <div class="metric-block">
+                <span>Unassigned Managers</span>
+                <strong>@Model.Summary.DepartmentsWithoutManager</strong>
+                <small>need ownership review</small>
+            </div>
+        </section>
+        <section class="panel compact-panel">
+            <h2>Recent Activity</h2>
+            <ul class="activity-list">
+                <li>Department data synced from API</li>
+                <li>Manager dropdown loaded from employees</li>
+                <li>Location filter connected to API locations</li>
+            </ul>
+        </section>
+    </aside>
+</div>

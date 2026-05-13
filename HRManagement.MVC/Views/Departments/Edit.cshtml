@@ -1,0 +1,12 @@
+﻿@model HRManagement.MVC.Models.Department.CreateDepartmentVM
+@{
+    ViewData["Title"] = "Edit Department";
+}
+<section class="page-header">
+    <div>
+        <h1>Edit Department</h1>
+        <p>Update manager and location allocation.</p>
+    </div>
+</section>
+<partial name="_DepartmentForm" model="Model" />
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

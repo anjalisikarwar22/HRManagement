@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using HRManagement.API.DTOs.Location;
 
 namespace HRManagement.API.Validators.Location
@@ -13,19 +13,13 @@ namespace HRManagement.API.Validators.Location
                 .MaximumLength(30)
                 .WithMessage("City cannot exceed 30 characters");
 
-<<<<<<< Updated upstream:HRManagement.API/Validators/Location/LocationRequestValidator.cs
 
-=======
->>>>>>> Stashed changes:HRManagement.API/Validators/Location/CreateLocationValidator.cs
             RuleFor(x => x.StreetAddress)
                 .NotEmpty()
                 .MaximumLength(40)
                 .WithMessage("Street Address cannot exceed 40 characters");
 
-<<<<<<< Updated upstream:HRManagement.API/Validators/Location/LocationRequestValidator.cs
 
-=======
->>>>>>> Stashed changes:HRManagement.API/Validators/Location/CreateLocationValidator.cs
             RuleFor(x => x.PostalCode)
                 .MaximumLength(12)
                 .WithMessage("Postal Code cannot exceed 12 characters")
@@ -40,15 +34,11 @@ namespace HRManagement.API.Validators.Location
                 .NotEmpty()
                 .MaximumLength(2)
                 .Matches("^[A-Z]{2}$")
-<<<<<<< Updated upstream:HRManagement.API/Validators/Location/LocationRequestValidator.cs
                 .WithMessage("Country Id cannot exceed 2 characters");
 
 
                 //.MustAsync(async (countryId, cancellation) =>
                 //    await countryRepository.ExistsAsync(countryId))
-=======
-                .WithMessage("Country Id must be 2 uppercase characters");
->>>>>>> Stashed changes:HRManagement.API/Validators/Location/CreateLocationValidator.cs
         }
     }
 }

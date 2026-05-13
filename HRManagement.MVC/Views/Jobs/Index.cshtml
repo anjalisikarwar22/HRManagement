@@ -1,0 +1,106 @@
+﻿@model HRManagement.MVC.Models.Job.JobIndexPageVM
+@{
+    ViewData["Title"] = "Jobs";
+}
+<section class="page-header">
+    <div>
+        <h1>Jobs</h1>
+        <p>Monitor job roles, salary bands, and staffing readiness.</p>
+    </div>
+    <a class="btn btn-primary" asp-action="Create">Create Job</a>
+</section>
+
+<section class="kpi-strip">
+    <div class="kpi-card"><span>Total Jobs</span><strong>@Model.TotalJobs</strong></div>
+    <div class="kpi-card"><span>Salary Floor</span><strong>@((Model.LowestSalary ?? 0).ToString("C0"))</strong></div>
+    <div class="kpi-card"><span>Salary Ceiling</span><strong>@((Model.HighestSalary ?? 0).ToString("C0"))</strong></div>
+    <div class="kpi-card"><span>Avg. Band</span><strong>@((Model.AverageBand ?? 0).ToString("C0"))</strong></div>
+</section>
+
+<section class="panel data-panel">
+    <form class="toolbar jobs-toolbar" method="get" data-filter-form>
+        <input class="form-control" type="search" name="search" value="@Model.Search" placeholder="Search by job title..." />
+        <input class="form-control" type="number" name="minSalary" value="@Model.MinSalary" placeholder="Min salary" min="0" />
+        <input class="form-control" type="number" name="maxSalary" value="@Model.MaxSalary" placeholder="Max salary" min="0" />
+        <button class="btn btn-outline-primary" type="submit">Filter</button>
+        <a class="btn btn-light" asp-action="Index">Reset</a>
+    </form>
+    <div class="table-meta">
+        <span>Showing @Model.Jobs.Count of @Model.TotalJobs jobs</span>
+        @if (!string.IsNullOrWhiteSpace(Model.StatusMessage))
+        {
+            <span>@Model.StatusMessage</span>
+        }
+    </div>
+    <div class="table-responsive">
+        <table class="table app-table" data-dashboard-table>
+            <thead>
+                <tr>
+                    <th>Job ID</th>
+                    <th>Title</th>
+                    <th>Min Salary</th>
+                    <th>Max Salary</th>
+                    <th>Band</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Jobs)
+                {
+                    var modalId = $"salary-{item.JobId.Replace(" ", "-").Replace(".", "-")}";
+                    <tr>
+                        <td>@item.JobId</td>
+                        <td><strong>@item.JobTitle</strong></td>
+                        <td>@((item.MinSalary ?? 0).ToString("C0"))</td>
+                        <td>@((item.MaxSalary ?? 0).ToString("C0"))</td>
+                        <td>@((item.SalarySpread ?? 0).ToString("C0"))</td>
+                        <td class="text-end action-cell">
+                            <a class="table-action" asp-action="Details" asp-route-id="@item.JobId">Details</a>
+                            <a class="table-action" asp-action="Edit" asp-route-id="@item.JobId">Edit</a>
+                            <button class="table-action button-link" type="button" data-bs-toggle="modal" data-bs-target="#@modalId">Salary</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+@foreach (var item in Model.Jobs)
+{
+    var modalId = $"salary-{item.JobId.Replace(" ", "-").Replace(".", "-")}";
+    <div class="modal fade" id="@modalId" tabindex="-1" aria-labelledby="@modalId-title" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form method="post" asp-action="UpdateSalaryRange" asp-route-id="@item.JobId">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="search" value="@Model.Search" />
+                    <input type="hidden" name="minSalary" value="@Model.MinSalary" />
+                    <input type="hidden" name="maxSalary" value="@Model.MaxSalary" />
+                    <div class="modal-header">
+                        <h2 class="modal-title fs-5" id="@modalId-title">Update Salary Band</h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body form-grid single-column">
+                        <label class="form-field">
+                            <span>Job</span>
+                            <input class="form-control" value="@item.JobTitle (@item.JobId)" readonly />
+                        </label>
+                        <label class="form-field">
+                            <span>Minimum Salary</span>
+                            <input class="form-control" name="MinSalary" type="number" min="0" value="@item.MinSalary" />
+                        </label>
+                        <label class="form-field">
+                            <span>Maximum Salary</span>
+                            <input class="form-control" name="MaxSalary" type="number" min="0" value="@item.MaxSalary" />
+                        </label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary" type="submit">Update Salary</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}

@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
 using HRManagement.API.Common;
-=======
-﻿using HRManagement.API.Common;
->>>>>>> Stashed changes
 using HRManagement.API.Exceptions;
 using System.Net;
 using System.Text.Json;

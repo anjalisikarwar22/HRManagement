@@ -1,0 +1,19 @@
+﻿@model HRManagement.MVC.Models.Department.DepartmentRowVM
+@{
+    ViewData["Title"] = "Department Details";
+}
+<section class="page-header">
+    <div>
+        <h1>@Model.DepartmentName</h1>
+        <p>Department record #DEP-@Model.DepartmentId.ToString("000")</p>
+    </div>
+    <a class="btn btn-outline-primary" asp-action="Index">Back</a>
+</section>
+<section class="panel details-panel">
+    <dl>
+        <dt>Department ID</dt><dd>@Model.DepartmentId</dd>
+        <dt>Manager</dt><dd>@Model.ManagerDisplay</dd>
+        <dt>Location</dt><dd>@Model.LocationDisplay</dd>
+    </dl>
+    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.DepartmentId">Edit Department</a>
+</section>

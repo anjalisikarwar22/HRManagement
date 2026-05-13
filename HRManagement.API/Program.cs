@@ -67,7 +67,6 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddDbContext<HRContext>(options =>
     options.UseSqlServer(
-<<<<<<< Updated upstream
         builder.Configuration.GetConnectionString("DefaultConnection"),
         sqlOpts =>
         {
@@ -77,11 +76,6 @@ builder.Services.AddDbContext<HRContext>(options =>
                 maxRetryDelay: TimeSpan.FromSeconds(10),
                 errorNumbersToAdd: null);
         }));
-=======
-        builder.Configuration.GetConnectionString("HRConnection")
-        ?? builder.Configuration.GetConnectionString("HR")
-        ?? builder.Configuration.GetConnectionString("DefaultConnection")));
->>>>>>> Stashed changes
 
 builder.Services.AddScoped<IRegionRepository, RegionRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
@@ -100,15 +94,12 @@ builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<JwtService>();
-
-<<<<<<< Updated upstream
-builder.Services.AddAutoMapper(typeof(JobProfile).Assembly);
-=======
 builder.Services.AddScoped<DepartmentValidator>();
 builder.Services.AddScoped<DepartmentHeaderFilter>();
 builder.Services.AddScoped<LogActionFilter>();
 builder.Services.AddScoped<ValidationFilter>();
->>>>>>> Stashed changes
+
+builder.Services.AddAutoMapper(typeof(JobProfile).Assembly);
 
 builder.Services.AddFluentValidationAutoValidation();
 
@@ -116,9 +107,6 @@ builder.Services.AddValidatorsFromAssemblyContaining<JobDtoValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateRegionDtoValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<LocationRequestValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateEmployeeValidator>();
-builder.Services.AddScoped<IValidator<CreateDepartmentDto>, CreateDepartmentFluentValidator>();
-builder.Services.AddScoped<IValidator<UpdateDepartmentDto>, UpdateDepartmentFluentValidator>();
-
 builder.Services.AddScoped<IValidator<CreateDepartmentDto>, CreateDepartmentFluentValidator>();
 builder.Services.AddScoped<IValidator<UpdateDepartmentDto>, UpdateDepartmentFluentValidator>();
 
@@ -210,13 +198,4 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-<<<<<<< Updated upstream
 app.Run();
-=======
-
-app.Run();
-
-public partial class Program
-{
-}
->>>>>>> Stashed changes

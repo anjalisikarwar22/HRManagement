@@ -1,4 +1,4 @@
-﻿using HRManagement.API.Data;
+using HRManagement.API.Data;
 using HRManagement.API.DTOs.Auth;
 using HRManagement.API.Exceptions;
 using HRManagement.API.Repository;
@@ -19,12 +19,8 @@ namespace HRManagement.API.Services
             _context = context;
         }
 
-<<<<<<< Updated upstream
         public async Task<string>
             RegisterAsync(RegisterDto dto)
-=======
-        public async Task<string> RegisterAsync(RegisterDto dto)
->>>>>>> Stashed changes
         {
             var employee = await _context.Employees
                 .FirstOrDefaultAsync(e =>
@@ -89,12 +85,8 @@ namespace HRManagement.API.Services
             };
         }
 
-<<<<<<< Updated upstream
         public async Task<object>
             GetCurrentUserAsync(decimal employeeId)
-=======
-        public async Task<object> GetCurrentUserAsync(decimal employeeId)
->>>>>>> Stashed changes
         {
             var employee = await _context.Employees
                 .Include(e => e.Job)
