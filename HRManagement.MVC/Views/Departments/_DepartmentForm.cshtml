@@ -1,0 +1,27 @@
+﻿@model HRManagement.MVC.Models.Department.CreateDepartmentVM
+<section class="panel form-panel">
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger validation-summary"></div>
+        <div class="form-grid">
+            <label class="form-field">
+                <span asp-for="DepartmentName"></span>
+                <input class="form-control" asp-for="DepartmentName" placeholder="e.g. Human Resources" />
+                <span asp-validation-for="DepartmentName" class="text-danger"></span>
+            </label>
+            <label class="form-field">
+                <span asp-for="ManagerId"></span>
+                <select class="form-select" asp-for="ManagerId" asp-items="Model.ManagerOptions"></select>
+                <span asp-validation-for="ManagerId" class="text-danger"></span>
+            </label>
+            <label class="form-field">
+                <span asp-for="LocationId"></span>
+                <select class="form-select" asp-for="LocationId" asp-items="Model.LocationOptions"></select>
+                <span asp-validation-for="LocationId" class="text-danger"></span>
+            </label>
+        </div>
+        <div class="form-actions">
+            <a class="btn btn-outline-secondary" asp-action="Index">Cancel</a>
+            <button class="btn btn-primary" type="submit">Save Department</button>
+        </div>
+    </form>
+</section>

@@ -6,7 +6,6 @@ using HRManagement.API.Repository;
 using HRManagement.API.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System.Diagnostics.Metrics;
 
 namespace HR.Test
 {
@@ -198,6 +197,5 @@ namespace HR.Test
             _service!.CreateCountry(dto);
 
         }
-
     }   
 }

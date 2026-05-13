@@ -1,0 +1,10 @@
+﻿@{
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? "Departments";
+}
+<header class="topbar">
+    <button class="menu-button" type="button" aria-label="Menu" data-sidebar-toggle>&#9776;</button>
+    <strong>HR Management</strong>
+    <form class="topbar-search" method="get" asp-controller="@controller" asp-action="Index">
+        <input type="search" name="search" placeholder="Global search..." aria-label="Global search" />
+    </form>
+</header>

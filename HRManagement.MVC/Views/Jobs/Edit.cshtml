@@ -1,0 +1,12 @@
+﻿@model HRManagement.MVC.Models.Job.CreateJobVM
+@{
+    ViewData["Title"] = "Edit Job";
+}
+<section class="page-header">
+    <div>
+        <h1>Edit Job</h1>
+        <p>Update role title and compensation band.</p>
+    </div>
+</section>
+<partial name="_JobForm" model="Model" />
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

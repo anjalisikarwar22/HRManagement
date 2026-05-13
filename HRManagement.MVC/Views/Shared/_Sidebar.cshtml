@@ -1,0 +1,13 @@
+﻿@{
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+}
+<aside class="sidebar">
+    <a class="brand" asp-controller="Departments" asp-action="Index">HR System</a>
+    <nav class="side-nav">
+        <a class="side-link disabled" href="#"><span>Employees</span></a>
+        <a class="side-link @(controller == "Departments" ? "active" : "")" asp-controller="Departments" asp-action="Index"><span>Departments</span></a>
+        <a class="side-link @(controller == "Jobs" ? "active" : "")" asp-controller="Jobs" asp-action="Index"><span>Jobs</span></a>
+        <a class="side-link disabled" href="#"><span>Locations</span></a>
+        <a class="side-link disabled" href="#"><span>Regions</span></a>
+    </nav>
+</aside>

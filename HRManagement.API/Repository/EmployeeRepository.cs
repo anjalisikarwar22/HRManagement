@@ -1,4 +1,4 @@
-﻿using HRManagement.API.Data;
+using HRManagement.API.Data;
 using HRManagement.API.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -111,5 +111,4 @@ namespace HRManagement.API.Repository
             await _context.SaveChangesAsync();
         }
     }
-
 }

@@ -1,4 +1,4 @@
-﻿using HRManagement.API.Common;
+using HRManagement.API.Common;
 using HRManagement.API.DTOs.Employee;
 using HRManagement.API.Services;
 using Microsoft.AspNetCore.Authorization;

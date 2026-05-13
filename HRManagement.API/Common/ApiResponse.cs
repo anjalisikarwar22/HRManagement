@@ -1,4 +1,4 @@
-namespace HRManagement.API.Common
+﻿namespace HRManagement.API.Common
 {
     public class ApiResponse<T>
     {

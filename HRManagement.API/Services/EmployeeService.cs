@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using HRManagement.API.DTOs.Employee;
 using HRManagement.API.Exceptions;
 using HRManagement.API.Interfaces;
@@ -83,16 +83,7 @@ namespace HRManagement.API.Services
                 }
             }
 
-            decimal salary;
-
-            if (dto.Salary == null)
-            {
-                salary = job.MinSalary ?? 0;
-            }
-            else
-            {
-                salary = dto.Salary.Value;
-            }
+            decimal salary = dto.Salary ?? job.MinSalary ?? 0;
 
             if (salary < job.MinSalary || salary > job.MaxSalary)
             {
@@ -198,7 +189,6 @@ namespace HRManagement.API.Services
             _mapper.Map(dto, employee);
 
             _employeeRepository.Update(employee);
-
             await _employeeRepository.SaveChangesAsync();
 
             return "Employee updated successfully";
@@ -231,7 +221,6 @@ namespace HRManagement.API.Services
             _mapper.Map(dto, employee);
 
             _employeeRepository.Update(employee);
-
             await _employeeRepository.SaveChangesAsync();
 
             return "Profile updated successfully";

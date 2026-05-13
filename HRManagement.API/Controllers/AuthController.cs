@@ -49,11 +49,8 @@ namespace HRManagement.API.Controllers
             employee.Password =
                 BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
-            employee.Password =
-                BCrypt.Net.BCrypt.HashPassword(dto.Password);
             if (string.IsNullOrEmpty(employee.Role))
             {
-
                 employee.Role = "Employee";
             }
 
@@ -106,7 +103,7 @@ namespace HRManagement.API.Controllers
                 });
             }
 
-            var token =_jwtService.GenerateToken(employee);
+            var token = _jwtService.GenerateToken(employee);
 
             return Ok(new
             {
@@ -136,24 +133,24 @@ namespace HRManagement.API.Controllers
                 return NotFound();
             }
 
-            decimal totalSalary = employee.Salary?? 0;
+            decimal totalSalary = employee.Salary ?? 0;
 
             if (employee.CommissionPct != null)
             {
-                totalSalary +=employee.Salary ?? 0 * employee.CommissionPct.Value;
+                totalSalary += (employee.Salary ?? 0) * employee.CommissionPct.Value;
             }
 
             return Ok(new
             {
                 employee.EmployeeId,
 
-                FullName =employee.FirstName + " " + employee.LastName,
+                FullName = employee.FirstName + " " + employee.LastName,
 
                 employee.Email,
 
                 JobTitle = employee.Job?.JobTitle,
 
-                Department =employee.Department?.DepartmentName,
+                Department = employee.Department?.DepartmentName,
 
                 employee.Salary,
 
@@ -166,4 +163,5 @@ namespace HRManagement.API.Controllers
         }
     }
 }
+
 

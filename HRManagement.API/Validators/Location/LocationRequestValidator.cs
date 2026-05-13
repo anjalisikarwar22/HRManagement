@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using HRManagement.API.DTOs.Location;
 
 namespace HRManagement.API.Validators.Location

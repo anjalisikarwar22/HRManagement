@@ -171,7 +171,9 @@ namespace HRManagement.API.Controllers
                 var updated = await _departmentService.UpdateAsync(id, dto);
 
                 if (updated == null)
+                {
                     return NotFound(new ApiResponse<object>(false, $"Department {id} was not found.", null));
+                }
 
                 return Ok(new ApiResponse<DepartmentDto>(true, "Department updated successfully.", updated));
             }
