@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 using HRManagement.API.Common;
+=======
+﻿using HRManagement.API.Common;
+>>>>>>> Stashed changes
 using HRManagement.API.Exceptions;
 using System.Net;
 using System.Text.Json;
@@ -10,9 +14,7 @@ namespace HRManagement.API.Middleware
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionMiddleware> _logger;
 
-        public ExceptionMiddleware(
-            RequestDelegate next,
-            ILogger<ExceptionMiddleware> logger)
+        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
         {
             _next = next;
             _logger = logger;

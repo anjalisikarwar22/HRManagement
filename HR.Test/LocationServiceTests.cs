@@ -1,12 +1,17 @@
+<<<<<<< Updated upstream
 using Xunit;
 ﻿using AutoMapper;
 using HRManagement.API.DTOs.Location;
+=======
+﻿using HRManagement.API.DTOs.Location;
+>>>>>>> Stashed changes
 using HRManagement.API.Exceptions;
 using HRManagement.API.Mappings;
 using HRManagement.API.Models;
 using HRManagement.API.Repository;
 using HRManagement.API.Services;
 using Moq;
+<<<<<<< Updated upstream
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +22,12 @@ namespace HR.Test
 {
 
 
+=======
+using Xunit;
+
+namespace HR.Test
+{
+>>>>>>> Stashed changes
     public class LocationServiceTests
     {
         private readonly Mock<ILocationRepository>_repositoryMock;
@@ -41,11 +52,16 @@ namespace HR.Test
 
 
         [Fact]
+<<<<<<< Updated upstream
         public async Task
         GetByIdAsync_ShouldReturnLocation()
         {
             // Arrange
 
+=======
+        public async Task GetByIdAsync_ShouldReturnLocation()
+        {
+>>>>>>> Stashed changes
             var location = new Location
             {
                 LocationId = 1000,
@@ -61,6 +77,7 @@ namespace HR.Test
             // Assert
 
             Assert.NotNull(result);
+<<<<<<< Updated upstream
 
             Assert.Equal( "Seattle", result.City);
         }
@@ -72,6 +89,14 @@ namespace HR.Test
         {
             // Arrange
 
+=======
+            Assert.Equal("Seattle", result.City);
+        }
+
+        [Fact]
+        public async Task GetByIdAsync_ShouldThrowNotFound()
+        {
+>>>>>>> Stashed changes
             _repositoryMock.Setup(x => x.GetByIdAsync(9999))
                            .ReturnsAsync((Location)null);
 
@@ -83,6 +108,7 @@ namespace HR.Test
 
 
         [Fact]
+<<<<<<< Updated upstream
         public async Task
         CreateAsync_ShouldCreateLocation()
         {
@@ -109,17 +135,72 @@ namespace HR.Test
         }
 
 
+=======
+        public async Task CreateAsync_ShouldCreateLocation()
+        {
+            var dto = new CreateLocationDto
+            {
+                City = "Delhi",
+                StreetAddress = "Street 1",
+                PostalCode = "110001",
+                StateProvince = "Delhi",
+                CountryId = "IN"
+            };
+
+            _repositoryMock.Setup(x => x.GetMaxLocationIdAsync())
+                .ReturnsAsync(2200);
+
+            await _service.CreateAsync(dto);
+
+            _repositoryMock.Verify(
+                x => x.AddAsync(It.Is<Location>(location =>
+                    location.LocationId == 2300 &&
+                    location.City == "Delhi" &&
+                    location.CountryId == "IN")),
+                Times.Once);
+            _repositoryMock.Verify(x => x.SaveChangesAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task CreateAsync_WhenNoLocationsExist_ShouldStartAt100()
+        {
+            var dto = new CreateLocationDto
+            {
+                City = "Delhi",
+                CountryId = "IN"
+            };
+
+            _repositoryMock.Setup(x => x.GetMaxLocationIdAsync())
+                .ReturnsAsync((decimal?)null);
+>>>>>>> Stashed changes
 
         
 
 
 
+<<<<<<< Updated upstream
 
         [Fact]
         public async Task
         UpdateAsync_ShouldUpdateLocation()
         {
             // Arrange
+=======
+            _repositoryMock.Verify(
+                x => x.AddAsync(It.Is<Location>(location => location.LocationId == 100)),
+                Times.Once);
+            _repositoryMock.Verify(x => x.SaveChangesAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_ShouldUpdateLocation()
+        {
+            var existingLocation = new Location
+            {
+                LocationId = 1000,
+                City = "Old City"
+            };
+>>>>>>> Stashed changes
 
             var existingLocation =new Location
                 {
@@ -144,6 +225,7 @@ namespace HR.Test
 
             // Assert
 
+<<<<<<< Updated upstream
             Assert.Equal( "New Delhi",existingLocation.City);
 
             _repositoryMock.Verify(x => x.UpdateAsync(existingLocation),Times.Once);
@@ -157,6 +239,30 @@ namespace HR.Test
         UpdateAsync_ShouldThrowException_WhenUpdateFails()
         {
             // Arrange
+=======
+        [Fact]
+        public async Task UpdateAsync_ShouldThrowNotFound()
+        {
+            var dto = new UpdateLocationDto
+            {
+                City = "Delhi"
+            };
+
+            _repositoryMock.Setup(x => x.GetByIdAsync(1000))
+                .ReturnsAsync((Location?)null);
+
+            await Assert.ThrowsAsync<NotFoundException>(() => _service.UpdateAsync(1000, dto));
+        }
+
+        [Fact]
+        public async Task UpdateAsync_ShouldThrowException_WhenUpdateFails()
+        {
+            var location = new Location
+            {
+                LocationId = 1000,
+                City = "Old City"
+            };
+>>>>>>> Stashed changes
 
             var location =new Location{
                 LocationId = 1000,
@@ -170,6 +276,7 @@ namespace HR.Test
             _repositoryMock.Setup(x => x.GetByIdAsync(1000))
                            .ReturnsAsync(location);
 
+<<<<<<< Updated upstream
             _repositoryMock.Setup(x =>x.UpdateAsync(location))
                            .ThrowsAsync(new Exception("Database error"));
 
@@ -184,6 +291,19 @@ namespace HR.Test
         GetByCityAsync_ShouldReturnLocation()
         {
             // Arrange
+=======
+            await Assert.ThrowsAsync<Exception>(() => _service.UpdateAsync(1000, dto));
+        }
+
+        [Fact]
+        public async Task GetByCityAsync_ShouldReturnLocation()
+        {
+            var location = new Location
+            {
+                LocationId = 1000,
+                City = "Seattle"
+            };
+>>>>>>> Stashed changes
 
             var location =new Location
                 {
@@ -191,6 +311,7 @@ namespace HR.Test
                     City = "Seattle"
                 };
 
+<<<<<<< Updated upstream
             _repositoryMock.Setup(x =>x.GetByCityAsync("Seattle"))
                            .ReturnsAsync(location);
 
@@ -216,6 +337,21 @@ namespace HR.Test
 
 
             await Assert.ThrowsAsync<NotFoundException>(() =>_service.GetByCityAsync("Unknown"));
+=======
+            var result = await _service.GetByCityAsync("Seattle");
+
+            Assert.NotNull(result);
+            Assert.Equal("Seattle", result.City);
+        }
+
+        [Fact]
+        public async Task GetByCityAsync_ShouldThrowNotFound()
+        {
+            _repositoryMock.Setup(x => x.GetByCityAsync("Unknown"))
+                .ReturnsAsync((Location?)null);
+
+            await Assert.ThrowsAsync<NotFoundException>(() => _service.GetByCityAsync("Unknown"));
+>>>>>>> Stashed changes
         }
     }
 }

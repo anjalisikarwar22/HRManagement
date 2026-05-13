@@ -37,7 +37,11 @@ namespace HRManagement.API.Controllers
         
 
         [HttpGet("{id}")]
+<<<<<<< Updated upstream
         public async Task<IActionResult> GetEmployeeById(decimal id)
+=======
+        public async Task<IActionResult> GetEmployeeById(int id)
+>>>>>>> Stashed changes
         {
             var currentUserId =int.Parse( User.FindFirstValue(ClaimTypes.NameIdentifier));
 
@@ -82,6 +86,21 @@ namespace HRManagement.API.Controllers
                     null));
         }
 
+<<<<<<< Updated upstream
+=======
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{id}/role")]
+        public async Task<IActionResult> UpdateRole(int id,UpdateRoleDto dto)
+        {
+            var message =await _employeeService.UpdateRoleAsync(id,dto);
+
+            return Ok(
+                new ApiResponse<object>(
+                    true,
+                    message,
+                    null));
+        }
+>>>>>>> Stashed changes
 
         [HttpGet("me")]
         public async Task<IActionResult> GetMyProfile()

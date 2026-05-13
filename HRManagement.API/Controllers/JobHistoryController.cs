@@ -14,7 +14,10 @@ namespace HRManagement.API.Controllers
         private readonly IJobHistoryService _service;
 
         public JobHistoryController(IJobHistoryService service) => _service = service;
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ApiResponse<List<JobHistoryDTO>>>> GetAll()
@@ -27,7 +30,10 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         [HttpGet("dropdown")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ApiResponse<object>>> Dropdown()
@@ -51,7 +57,10 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         [HttpGet("by-job/{jobId:length(1,10)}")]
         [Authorize(Roles = "Admin,Employee")]
         public async Task<ActionResult<ApiResponse<List<JobHistoryDTO>>>> ByJob(string jobId)
@@ -64,7 +73,10 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         [HttpGet("by-employee/{empId:decimal:min(1)}")]
         [Authorize(Roles = "Admin,Employee")]
         public async Task<ActionResult<ApiResponse<List<JobHistoryDTO>>>> ByEmployee(decimal empId)
@@ -77,7 +89,10 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         [HttpGet("by-department/{deptId:decimal:min(1)}")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ApiResponse<List<JobHistoryDTO>>>> ByDepartment(decimal deptId)
@@ -90,7 +105,10 @@ namespace HRManagement.API.Controllers
                 Data = data
             });
         }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ApiResponse<JobHistoryDTO>>> Create([FromBody] JobHistoryDTO dto)
@@ -105,3 +123,8 @@ namespace HRManagement.API.Controllers
         }
     }
 }
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes

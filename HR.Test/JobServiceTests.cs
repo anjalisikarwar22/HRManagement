@@ -1,7 +1,5 @@
 ﻿using FluentValidation;
-using Xunit;
 using AutoMapper;
-using FluentValidation;
 using FluentValidation.Results;
 using HRManagement.API.DTOs;
 using HRManagement.API.Exceptions;
@@ -131,4 +129,5 @@ namespace HR.Test
         }
     }
 }
+
 

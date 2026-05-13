@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using FluentValidation;
 using FluentValidation.Results;
 using HRManagement.API.DTOs;
@@ -159,4 +159,5 @@ namespace HR.Test
         }
     }
 }
+
 
